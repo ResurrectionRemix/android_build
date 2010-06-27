@@ -157,6 +157,11 @@ _product_var_list += PRODUCT_PRODUCT_SERVICES_PROPERTIES
 _product_var_list += PRODUCT_ODM_PROPERTIES
 _product_var_list += PRODUCT_CHARACTERISTICS
 
+# A list of property assignments, like "key = value", with zero or more
+# whitespace characters on either side of the '='.
+# used for overriding properties in build.prop
+_product_var_list += PRODUCT_BUILD_PROP_OVERRIDES
+
 # A list of words like <source path>:<destination path>[:<owner>].
 # The file at the source path should be copied to the destination path
 # when building  this product.  <destination path> is relative to
