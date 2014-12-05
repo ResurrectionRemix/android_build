@@ -97,7 +97,9 @@ else
   endif
 endif
 
+ifeq ($(LIQUIFY),true)
 include $(BUILD_SYSTEM)/graphite.mk
+endif
 
 # The following LOCAL_ variables will be modified in this file.
 # Because the same LOCAL_ variables may be used to define modules for both 1st arch and 2nd arch,
