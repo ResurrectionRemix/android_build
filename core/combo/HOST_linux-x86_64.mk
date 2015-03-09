@@ -18,7 +18,7 @@
 # Included by combo/select.mk
 
 ifeq ($(strip $(HOST_TOOLCHAIN_PREFIX)),)
-ifeq ($(LIQUIFY),true)
+ifeq ($(RROPTI),true)
 HOST_TOOLCHAIN_PREFIX := prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.8/bin/x86_64-linux-
 else
 HOST_TOOLCHAIN_PREFIX := prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.6/bin/x86_64-linux-
