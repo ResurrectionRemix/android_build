@@ -56,6 +56,21 @@ CLANG_CONFIG_EXTRA_CFLAGS += \
   -Wno-unused-command-line-argument
 
 CLANG_CONFIG_UNKNOWN_CFLAGS := \
+  -mvectorize-with-neon-double \
+  -mvectorize-with-neon-quad \
+  -fgcse-after-reload \
+  -fgcse-las \
+  -fgcse-sm \
+  -fipa-pta \
+  -fmodulo-sched \
+  -fmodulo-sched-allow-regmoves \
+  -frerun-cse-after-loop \
+  -frename-registers \
+  -fsection-anchors \
+  -ftree-loop-im \
+  -ftree-loop-ivcanon \
+  -funsafe-loop-optimizations \
+  -fweb \
   -funswitch-loops \
   -fno-tree-sra \
   -finline-limit=64 \
