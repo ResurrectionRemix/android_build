@@ -1,0 +1,76 @@
+#!/bin/bash
+#
+# Copyright (C) 2015 The MoKee OpenSource Project
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+TMPDIR=/tmp/pngcrusher-$$
+BASE=$(pwd)
+
+if [ -e "$1" ];then
+    NAME=$(basename $1)
+    echo -e $CL_YLW"Optimize:"$CL_RST" $NAME.."
+
+    APKINFO=$(grep "name=\"$NAME\"" $APKCERTS)
+    [ $QUIET ] || echo "APKINFO: $APKINFO"
+    if [ "$APKINFO" = "" ];then
+        echo -e $CL_YLW"No apk info for $NAME, might be prebuilt, skipping"$CL_RST
+        exit 1
+    fi
+    CERT=$(echo $APKINFO | awk {'print $2'} | cut -f 2 -d "=" | tr -d "\"")
+    KEY=$(echo $APKINFO | awk {'print $3'} | cut -f 2 -d "=" | tr -d "\"")
+    if [ "$CERT" = "" ];then
+        echo -e $CL_RED"No certificate for $NAME"$CL_RST
+        exit 1
+    elif [ "$CERT" = "PRESIGNED" ];then
+        echo -e $CL_YLW"$NAME is presigned, skipping"$CL_RST
+        exit 1
+    elif [ "$NAME" = "webview.apk" ];then
+        echo -e $CL_YLW"$NAME is special, skipping"$CL_RST
+        exit 1
+    fi
+
+    [ $QUIET ] || echo -e $CL_YLW"Certificate:"$CL_RST" $CERT"
+
+    [ -d $TMPDIR/$NAME ] && rm -rf $TMPDIR/$NAME
+    mkdir -p $TMPDIR/$NAME
+    trap "rm -rf $TMPDIR; exit" INT TERM EXIT
+    cd $TMPDIR/$NAME
+    unzip -q $BASE/$1
+    PNG_FILES=$(find . -name "*.png" | grep -v "\.9.png$" | tr "\n" " ")
+    for x in $PNG_FILES;do
+        [ $QUIET ] || echo -e $CL_YLW"Crushing $x"$CL_RST
+        optimize_png $x
+    done
+    cp $BASE/$1 $BASE/$1.old
+
+    [ $QUIET ] || echo -e $CL_YLW"Repacking apk.."$CL_RST
+    aapt p -0 .dat -0 .dict -0 .arsc -F $NAME .
+
+    [ $QUIET ] || echo -e $CL_YLW"Resigning with cert: $(echo $CERT)"$CL_RST
+
+    [ $QUIET ] || echo java -jar $ANDROID_HOST_OUT/framework/signapk.jar $ANDROID_BUILD_TOP/$CERT $ANDROID_BUILD_TOP/$KEY $NAME signed_$NAME
+    java -jar $ANDROID_HOST_OUT/framework/signapk.jar $ANDROID_BUILD_TOP/$CERT $ANDROID_BUILD_TOP/$KEY $NAME signed_$NAME
+    [ $QUIET ] || echo -e $CL_YLW"Zipaligning.."$CL_RST
+
+    zipalign -f 4 signed_$NAME $BASE/$1
+    if [ ! $QUIET ];then
+        ls -l $BASE/$1.old
+        ls -l $BASE/$1
+    fi
+    rm $BASE/$1.old
+else
+    echo "Usage: $0 [apk file]"
+fi
