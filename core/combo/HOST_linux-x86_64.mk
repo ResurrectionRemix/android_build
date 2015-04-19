@@ -32,7 +32,7 @@ HOST_AR  := $(HOST_TOOLCHAIN_PREFIX)ar
 endif # $(HOST_TOOLCHAIN_PREFIX)gcc exists
 
 # gcc location for clang; to be updated when clang is updated
-ifeq ($(LIQUIFY),true)
+ifeq ($(RROPTI),true)
 HOST_TOOLCHAIN_FOR_CLANG := prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.8/
 else
 HOST_TOOLCHAIN_FOR_CLANG := prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.6/

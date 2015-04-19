@@ -32,14 +32,14 @@ endif
 # Clang flags for all host or target rules
 CLANG_CONFIG_EXTRA_ASFLAGS :=
 CLANG_CONFIG_EXTRA_CFLAGS :=
-ifeq ($(LIQUIFY),true)
+ifeq ($(RR_03),true)
 CLANG_CONFIG_EXTRA_CPPFLAGS := -O3 -Qunused-arguments -Wno-unknown-warning-option -D__compiler_offsetof=__builtin_offsetof
 else
 CLANG_CONFIG_EXTRA_CPPFLAGS :=
 endif
 CLANG_CONFIG_EXTRA_LDFLAGS :=
 
-ifeq ($(LIQUIFY),true)
+ifeq ($(RR_03),true)
 CLANG_CONFIG_EXTRA_CFLAGS += \
   -O3 -Qunused-arguments -Wno-unknown-warning-option -D__compiler_offsetof=__builtin_offsetof
 else
@@ -65,7 +65,8 @@ CLANG_CONFIG_UNKNOWN_CFLAGS := \
   -Wmaybe-uninitialized \
   -Wno-maybe-uninitialized \
   -Wno-error=maybe-uninitialized \
-  -fno-canonical-system-headers
+  -fno-canonical-system-headers \
+  -mfpu=neon-vfpv4
 
 # Clang flags for all host rules
 CLANG_CONFIG_HOST_EXTRA_ASFLAGS :=
