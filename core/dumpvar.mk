@@ -114,17 +114,17 @@ else
 $(info   RR_O3=false)
 endif
 ifeq (true,$(RR_GRAPHITE))
-$(info   RR_GRAPHITE=$(BLISS_GRAPHITE))
+$(info   RR_GRAPHITE=$(RR_GRAPHITE))
 else
 $(info   RR_GRAPHITE=false)
 endif
 ifdef RR_STRICT
-$(info   RR_STRICT=$(BLISS_STRICT))
+$(info   RR_STRICT=$(RR_STRICT))
 else
 $(info   RR_STRICT=false)
 endif
 ifdef RR_KRAIT
-$(info   RR_KRAIT=$(BLISS_KRAIT))
+$(info   RR_KRAIT=$(RR_KRAIT))
 else
 $(info   RR_KRAIT=false)
 endif
