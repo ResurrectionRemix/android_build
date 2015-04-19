@@ -75,52 +75,58 @@ $(info   TARGET_BUILD_APPS=$(TARGET_BUILD_APPS))
 $(info   TARGET_ARCH=$(TARGET_ARCH))
 $(info   TARGET_ARCH_VARIANT=$(TARGET_ARCH_VARIANT))
 $(info   TARGET_CPU_VARIANT=$(TARGET_CPU_VARIANT))
+ifdef TARGET_GCC_VERSION
 $(info   TARGET_GCC_VERSION=$(TARGET_GCC_VERSION))
-$(info   TARGET_NDK_GCC_VERSION=$(TARGET_NDK_GCC_VERSION))
-ifdef TARGET_KERNEL_CUSTOM_TOOLCHAIN
-$(info   TARGET_KERNEL_TOOLCHAIN=$(TARGET_KERNEL_CUSTOM_TOOLCHAIN))
 else
-$(info   TARGET_KERNEL_TOOLCHAIN=4.8)
+$(info   TARGET_GCC_VERSION=4.8)
 endif
+$(info   TARGET_NDK_GCC_VERSION=$(TARGET_NDK_GCC_VERSION))
+ifdef TARGET_TC_KERNEL
+$(info   TARGET_TC_KERNEL=$(TARGET_TC_KERNEL))
+else
+$(info   TARGET_TC_KERNEL DEFAULTING TO "4.8-sm"!)
+endif
+$(info   TARGET_TOOLS_PREFIX=$(TARGET_TOOLS_PREFIX))
+$(info   TARGET_TOOLCHAIN_ROOT=$(TARGET_TOOLCHAIN_ROOT))
+$(info   TARGET_CC=$($(combo_2nd_arch_prefix)TARGET_CC))
+ifdef GCC_OPTIMIZATION_LEVELS
+$(info   GCC_OPTIMIZATION_LEVELS=$(GCC_OPTIMIZATION_LEVELS))
+else
+$(info   GCC_OPTIMIZATION_LEVELS empty!)
+endif
+$(info   BUILD_ID=$(BUILD_ID))
+$(info   HOST_ARCH=$(HOST_ARCH))
+$(info   HOST_OS=$(HOST_OS))
+$(info   HOST_OS_EXTRA=$(HOST_OS_EXTRA))
+$(info   HOST_BUILD_TYPE=$(HOST_BUILD_TYPE))
+$(info   HOST_CC=$(HOST_CC))
+$(info   HOST_OUT_EXECUTABLES=$(HOST_OUT_EXECUTABLES))
+$(info   OUT_DIR=$(OUT_DIR))
+
 ifdef RROPTI
 $(info   RROPTI=$(RROPTI))
 else
 $(info   RROPTI=false)
 endif
-ifdef USE_O3_OPTIMIZATIONS
-$(info   USE_O3_OPTIMIZATIONS=$(RR_O3))
+ifdef RR_O3
+$(info   RR_O3=$(RR_O3))
 else
-$(info   USE_O3_OPTIMIZATIONS=false)
+$(info   RR_O3=false)
 endif
-ifdef USE_HOST_4_8
-$(info   USE_HOST_4_8=$(USE_HOST_4_8))
+ifeq (true,$(RR_GRAPHITE))
+$(info   RR_GRAPHITE=$(BLISS_GRAPHITE))
 else
-$(info   USE_HOST_4_8=false)
+$(info   RR_GRAPHITE=false)
 endif
-ifdef GRAPHITE_OPTS
-$(info   GRAPHITE_OPTIMIZATIONS=$(RR_GRAPHITE))
+ifdef RR_STRICT
+$(info   RR_STRICT=$(BLISS_STRICT))
 else
-$(info   GRAPHITE_OPTIMIZATIONS=false)
+$(info   RR_STRICT=false)
 endif
-ifdef STRICT_ALIASING
-$(info   STRICT_ALIASING=$(RR_STRICT))
+ifdef RR_KRAIT
+$(info   RR_KRAIT=$(BLISS_KRAIT))
 else
-$(info   STRICT_ALIASING=false)
-endif
-ifdef KRAIT_TUNINGS
-$(info   KRAIT_TUNINGS=$(RR_KRAIT))
-else
-$(info   KRAIT_TUNINGS=false)
-endif
-$(info   HOST_ARCH=$(HOST_ARCH))
-$(info   HOST_OS=$(HOST_OS))
-$(info   HOST_OS_EXTRA=$(HOST_OS_EXTRA))
-$(info   HOST_BUILD_TYPE=$(HOST_BUILD_TYPE))
-$(info   BUILD_ID=$(BUILD_ID))
-$(info   OUT_DIR=$(OUT_DIR))
-ifeq ($(CYNGN_TARGET),true)
-$(info   CYNGN_TARGET=$(CYNGN_TARGET))
-$(info   CYNGN_FEATURES=$(CYNGN_FEATURES))
+$(info   RR_KRAIT=false)
 endif
 $(info ============================================)
 endif
