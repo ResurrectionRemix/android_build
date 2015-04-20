@@ -125,6 +125,10 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += -Wl,--warn-shared-textrel
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += -Wl,--fatal-warnings
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += -Wl,--gc-sections
 
+$(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += $(BOARD_GLOBAL_CFLAGS)
+$(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += $(BOARD_GLOBAL_CPPFLAGS)
+$(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += $(BOARD_GLOBAL_LDFLAGS)
+
 $(combo_2nd_arch_prefix)TARGET_C_INCLUDES := \
 	$(libc_root)/arch-x86/include \
 	$(libc_root)/include \

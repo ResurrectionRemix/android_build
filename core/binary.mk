@@ -98,23 +98,22 @@ else
 endif
 
 # Include custom gcc flags.  Seperate them so they can be easily managed.
-ifeq ($(RR_STRICT),true)
+ifeq (strip $(RR_STRICT)),true)
 include $(BUILD_SYSTEM)/strict.mk
 endif
 
-ifeq ($(RR_KRAIT),true)
+ifeq ($(strip $(RR_KRAIT)),true)
 ifndef LOCAL_IS_HOST_MODULE
 include $(BUILD_SYSTEM)/krait.mk
 endif
 endif
 
-# Supported OS's and ARCH's only
+ifeq ($(strip $(RR_GRAPHITE)),true)
 ifeq (linux,$(HOST_OS))
 ifeq (1,$(words $(filter arm arm64,$(TARGET_ARCH))))
 # Do not use graphite on host modules or the clang compiler
 ifndef LOCAL_IS_HOST_MODULE
 ifndef LOCAL_CLANG
-ifeq ($(RR_GRAPHITE),true)
 include $(BUILD_SYSTEM)/graphite.mk
 endif
 endif
