@@ -67,7 +67,7 @@ HOST_OS_EXTRA:=$(shell python -c "import platform; print(platform.platform())")
 $(info ============================================)
 $(info   PLATFORM_VERSION_CODENAME=$(PLATFORM_VERSION_CODENAME))
 $(info   PLATFORM_VERSION=$(PLATFORM_VERSION))
-$(info   CM_VERSION=$(CM_VERSION))
+$(info   RR_VERSION=$(CM_VERSION))
 $(info   TARGET_PRODUCT=$(TARGET_PRODUCT))
 $(info   TARGET_BUILD_VARIANT=$(TARGET_BUILD_VARIANT))
 $(info   TARGET_BUILD_TYPE=$(TARGET_BUILD_TYPE))
@@ -89,11 +89,6 @@ endif
 $(info   TARGET_TOOLS_PREFIX=$(TARGET_TOOLS_PREFIX))
 $(info   TARGET_TOOLCHAIN_ROOT=$(TARGET_TOOLCHAIN_ROOT))
 $(info   TARGET_CC=$($(combo_2nd_arch_prefix)TARGET_CC))
-ifdef GCC_OPTIMIZATION_LEVELS
-$(info   GCC_OPTIMIZATION_LEVELS=$(GCC_OPTIMIZATION_LEVELS))
-else
-$(info   GCC_OPTIMIZATION_LEVELS empty!)
-endif
 $(info   BUILD_ID=$(BUILD_ID))
 $(info   HOST_ARCH=$(HOST_ARCH))
 $(info   HOST_OS=$(HOST_OS))
