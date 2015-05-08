@@ -358,6 +358,7 @@ ifneq (true,$(LOCAL_UNINSTALLABLE_MODULE))
   ifeq ($(LOCAL_NO_STANDARD_LIBRARIES),true)
   # Neither do Runtime Resource Overlay apks, which contain just the overlaid resources.
   else ifeq ($(LOCAL_IS_RUNTIME_RESOURCE_OVERLAY),true)
+  else ifeq ($(LOCAL_IGNORE_SUBDIR),true)
   else
     ifneq ($(use_testcase_folder),true)
       my_module_path := $(my_module_path)/$(LOCAL_MODULE)
