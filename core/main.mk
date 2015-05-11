@@ -457,10 +457,10 @@ ifeq ($(filter-out $(INTERNAL_MODIFIER_TARGETS),$(MAKECMDGOALS)),)
 $(INTERNAL_MODIFIER_TARGETS): $(DEFAULT_GOAL)
 endif
 
-
+#Add dirty mode:
 ifeq ($(MAKECMDGOALS),dirty)
-+dont_bother := true
-+endif
+dont_bother := true
+endif
 
 # Bring in all modules that need to be built.
 ifeq ($(HOST_OS),windows)
