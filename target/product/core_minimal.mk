@@ -74,6 +74,8 @@ PRODUCT_PACKAGES += \
     uncrypt \
     voip-common \
     webview \
+        libwebviewchromium_plat_support \
+        libwebviewchromium_loader \
     wifi-service
 
 PRODUCT_COPY_FILES += \
