@@ -18,78 +18,59 @@
 Given a target-files zipfile, produces an OTA package that installs
 that build.  An incremental OTA is produced if -i is given, otherwise
 a full OTA is produced.
-
 Usage:  ota_from_target_files [flags] input_target_files output_ota_package
-
   --board_config  <file>
       Deprecated.
-
   -k (--package_key) <key> Key to use to sign the package (default is
       the value of default_system_dev_certificate from the input
       target-files's META/misc_info.txt, or
       "build/target/product/security/testkey" if that value is not
       specified).
-
       For incremental OTAs, the default value is based on the source
       target-file, not the target build.
-
   -i  (--incremental_from)  <file>
       Generate an incremental OTA using the given target-files zip as
       the starting build.
-
   -v  (--verify)
       Remount and verify the checksums of the files written to the
       system and vendor (if used) partitions.  Incremental builds only.
-
   -o  (--oem_settings)  <file>
       Use the file to specify the expected OEM-specific properties
       on the OEM partition of the intended device.
-
   -w  (--wipe_user_data)
       Generate an OTA package that will wipe the user data partition
       when installed.
-
   -n  (--no_prereq)
       Omit the timestamp prereq check normally included at the top of
       the build scripts (used for developer OTA packages which
       legitimately need to go back and forth).
-
   -e  (--extra_script)  <file>
       Insert the contents of file at the end of the update script.
-
   -a  (--aslr_mode)  <on|off>
       Specify whether to turn on ASLR for the package (on by default).
-
   -2  (--two_step)
       Generate a 'two-step' OTA package, where recovery is updated
       first, so that any changes made to the system partition are done
       using the new recovery (new kernel, etc.).
-
   --block
       Generate a block-based OTA if possible.  Will fall back to a
       file-based OTA if the target_files is older and doesn't support
       block-based OTAs.
-
   -b  (--binary)  <file>
       Use the given binary as the update-binary in the output package,
       instead of the binary in the build's target_files.  Use for
       development only.
-
   -t  (--worker_threads) <int>
       Specifies the number of worker-threads that will be used when
       generating patches for incremental updates (defaults to 3).
-
   --backup <boolean>
       Enable or disable the execution of backuptool.sh.
       Disabled by default.
-
   --override_device <device>
       Override device-specific asserts. Can be a comma-separated list.
-
   --override_prop <boolean>
       Override build.prop items with custom vendor init.
       Enabled when TARGET_UNIFIED_DEVICE is defined in BoardConfig
-
 """
 
 import sys
@@ -270,7 +251,6 @@ class Item:
     all children and determine the best strategy for using set_perm_recursive and
     set_perm to correctly chown/chmod all the files to their desired
     values.  Recursively calls itself for all descendants.
-
     Returns a dict of {(uid, gid, dmode, fmode, selabel, capabilities): count} counting up
     all descendants of this node.  (dmode or fmode may be None.)  Also
     sets the best_subtree of each directory Item to the (uid, gid,
@@ -673,6 +653,15 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.RunBackup("restore")
     if block_based:
       script.Unmount("/system")
+
+  if block_based:
+    script.Print("Flashing SuperSU...")
+    common.ZipWriteStr(output_zip, "supersu/supersu.zip",
+                   ""+input_zip.read("SYSTEM/addon.d/UPDATE-SuperSU.zip"))
+    script.Mount("/system")
+    script.FlashSuperSU()
+  if block_based:
+    script.Unmount("/system")
 
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")
