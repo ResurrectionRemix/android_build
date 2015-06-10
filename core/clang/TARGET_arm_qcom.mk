@@ -1,18 +1,30 @@
-### Define paths
+### Define path to toolchain
 LLVM_PREBUILTS_PATH_QCOM := prebuilts/clang/linux-x86/host/llvm-Snapdragon_LLVM_for_Android_3.6/prebuilt/linux-x86_64/bin
 LLVM_PREBUILTS_HEADER_PATH_QCOM := $(LLVM_PREBUILTS_PATH_QCOM)/../lib/clang/3.6.0/include/
-LLVM_PREBUILTS_LIBRARIES_PATH_QCOM := $(LLVM_PREBUILTS_PATH_QCOM)/../lib/clang/3.6.0/lib
+
+CLANG_QCOM := $(LLVM_PREBUILTS_PATH_QCOM)/clang$(BUILD_EXECUTABLE_SUFFIX) -mllvm -aggressive-jt
+CLANG_QCOM_CXX := $(LLVM_PREBUILTS_PATH_QCOM)/clang++$(BUILD_EXECUTABLE_SUFFIX) -mllvm -aggressive-jt
+
+LLVM_AS := $(LLVM_PREBUILTS_PATH_QCOM)/llvm-as$(BUILD_EXECUTABLE_SUFFIX)
+LLVM_LINK := $(LLVM_PREBUILTS_PATH_QCOM)/llvm-link$(BUILD_EXECUTABLE_SUFFIX)
+
+CLANG_QCOM_CONFIG_EXTRA_TARGET_C_INCLUDES := $(LLVM_PREBUILTS_HEADER_PATH_QCOM)
+
+
+
+### Defines for linking
+libpath := $(LLVM_PREBUILTS_PATH_QCOM)/../lib/clang/3.6.0/lib
 
 CLANG_QCOM_EXTRA_OPT_LIBGCC := \
-  -L $(LLVM_PREBUILTS_LIBRARIES_PATH_QCOM)/linux/ \
+  -L $(libpath)/linux/ \
   -l clang_rt.builtins-arm-android
 
 CLANG_QCOM_EXTRA_OPT_LIBGCC_LINK := \
-  $(LLVM_PREBUILTS_LIBRARIES_PATH_QCOM)/linux/libclang_rt.builtins-arm-android.a
+  $(libpath)/linux/libclang_rt.builtins-arm-android.a
 
 CLANG_QCOM_EXTRA_OPT_LIBRARIES_LINK := \
-  $(LLVM_PREBUILTS_LIBRARIES_PATH_QCOM)/linux-propri_rt/libclang_rt.optlibc-krait.a \
-  $(LLVM_PREBUILTS_LIBRARIES_PATH_QCOM)/linux-propri_rt/libclang_rt.translib32.a
+  $(libpath)/linux-propri_rt/libclang_rt.optlibc-krait.a \
+  $(libpath)/linux-propri_rt/libclang_rt.translib32.a
 
 $(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_LIBGCC += $(CLANG_QCOM_EXTRA_OPT_LIBRARIES_LINK)
 
@@ -27,8 +39,8 @@ CLANG_QCOM_CONFIG_arm_TARGET_TOOLCHAIN_PREFIX := \
 CLANG_QCOM_CONFIG_LLVM_DEFAULT_FLAGS := \
   -ffunction-sections \
   -no-canonical-prefixes \
-  -fstack-protector
-  #-funwind-tables
+  -fstack-protector \
+  -funwind-tables
   #-fpic
 
 CLANG_QCOM_CONFIG_LLVM_EXTRA_FLAGS := \
@@ -46,9 +58,8 @@ CLANG_QCOM_CONFIG_LLVM_EXTRA_FLAGS := \
   -Wno-enum-compare
   #-Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable
 
-#http://pastebin.com/PZtk6WHB
 ifeq ($(TARGET_CPU_VARIANT),krait)
-  clang_qcom_mcpu := -mcpu=krait
+  clang_qcom_mcpu := -mcpu=krait -muse-optlibc
   clang_qcom_muse-optlibc := -muse-optlibc
   clang_qcom_mcpu_as := -mcpu=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=softfp
 else ifeq ($(TARGET_CPU_VARIANT),scorpion)
@@ -65,13 +76,18 @@ CLANG_QCOM_CONFIG_KRAIT_ALIGN_FLAGS := \
   -falign-functions -falign-labels -falign-loops
 
 CLANG_QCOM_CONFIG_KRAIT_MEM_FLAGS := \
-  -L $(LLVM_PREBUILTS_LIBRARIES_PATH_QCOM)/linux-propri_rt/ \
-  -l clang_rt.optlibc-krait
+  -L $(libpath)/linux/ \
+  -l clang_rt.optlibc-krait \
+  -mllvm -arm-expand-memcpy-runtime=16 \
+  -mllvm -arm-opt-memcpy=1 \
+  $(clang_qcom_muse-optlibc)
+  #-mllvm -arm-expand-memcpy-runtime=8
+  #-mllvm -aggressive-jt
 
 CLANG_QCOM_CONFIG_KRAIT_PARALLEL_FLAGS :=\
-  -L $(LLVM_PREBUILTS_LIBRARIES_PATH_QCOM)/linux-propri_rt/ \
+  -L $(libpath)/linux-propri_rt/ \
   -l clang_rt.translib32 \
-  -fparallel
+  -fparallel  
 
 ifeq ($(USE_CLANG_QCOM_LTO),true)
   CLANG_QCOM_CONFIG_LTO_FLAGS := -flto 
@@ -87,25 +103,27 @@ endif
 # See documentation especialy 3.4.21 Math optimization.
 CLANG_QCOM_CONFIG_KRAIT_FLAGS := \
   $(clang_qcom_mcpu) -mfpu=neon-vfpv4 -mfloat-abi=softfp -marm \
-  $(clang_qcom_muse-optlibc) \
   -fvectorize-loops \
   -fomit-frame-pointer \
   -foptimize-sibling-calls \
+  -funroll-loops \
+  -ffinite-math-only \
+  -funsafe-math-optimizations \
   -fdata-sections \
   $(CLANG_QCOM_CONFIG_LLVM_DEFAULT_FLAGS) \
   $(CLANG_QCOM_CONFIG_LLVM_EXTRA_FLAGS) \
   $(CLANG_QCOM_CONFIG_KRAIT_ALIGN_FLAGS) \
   $(CLANG_QCOM_CONFIG_KRAIT_MEM_FLAGS) \
-  -funsafe-math-optimizations \
-  -ffp-contract=fast \
-  -ffuse-loops \
-  -pipe
+  -ffp-contract=fast
 
-CLANG_QCOM_CONFIG_KRAIT_LDFLAGS := \
-  $(CLANG_QCOM_CONFIG_KRAIT_FLAGS) \
-  $(CLANG_QCOM_CONFIG_KRAIT_MEM_FLAGS) \
-  -Wl,--gc-sections \
-  -Wl,--sort-common
+#TODO:
+#-ffp-contract=fast maybe too dangerous?
+
+ifneq ($(USE_CLANG_QCOM_ONLY_ON_SELECTED_MODULES),true)
+  CLANG_QCOM_CONFIG_KRAIT_FLAGS += $(CLANG_QCOM_CONFIG_KRAIT_MEM_FLAGS)
+  USE_CLANG_QCOM_ONLY_ON_SELECTED_MODULES := false
+endif
+
 
 CLANG_QCOM_CONFIG_KRAIT_Ofast_FLAGS := \
   -Ofast -fno-fast-math \
@@ -133,28 +151,26 @@ CLANG_QCOM_CONFIG_arm_UNKNOWN_CFLAGS := \
   -fno-unswitch-loops \
   -fno-if-conversion
 
-
-
 ### Define global flags
 define subst-clang-qcom-incompatible-arm-flags
-  $(subst -march=armv5te,$(clang_qcom_mcpu),\
-  $(subst -march=armv5e,$(clang_qcom_mcpu),\
-  $(subst -march=armv7,$(clang_qcom_mcpu),\
-  $(subst -march=armv7-a,$(clang_qcom_mcpu),\
-  $(subst -mcpu=cortex-a15,$(clang_qcom_mcpu),\
-  $(subst -mtune=cortex-a15,$(clang_qcom_mcpu),\
-  $(subst -mcpu=cortex-a8,$(clang_qcom_mcpu),\
-  $(subst -O3,-Ofast,\
-  $(subst -O2,-Ofast,\
-  $(subst -Os,-Ofast,\
+  $(subst -march=armv5te,-mcpu=krait,\
+  $(subst -march=armv5e,-mcpu=krait,\
+  $(subst -march=armv7,-mcpu=krait,\
+  $(subst -march=armv7-a,-mcpu=krait,\
+  $(subst -mcpu=cortex-a15,-mcpu=krait,\
+  $(subst -mtune=cortex-a15,-mcpu=krait,\
+  $(subst -mcpu=cortex-a8,-mcpu=scorpion,\
+  $(subst -O3,-Ofast -fno-fast-math,\
+  $(subst -O2,-Ofast -fno-fast-math,\
+  $(subst -Os,-Ofast -fno-fast-math,\
   $(1)))))))))))
 endef
 
 define subst-clang-qcom-opt
-  $(subst -O3,-Ofast,\
-  $(subst -O2,-Ofast,\
-  $(subst -O1,-Ofast,\
-  $(subst -Os,-Ofast,\
+  $(subst -O3,-Ofast -fno-fast-math,\
+  $(subst -O2,-Ofast -fno-fast-math,\
+  $(subst -O1,-Ofast -fno-fast-math,\
+  $(subst -Os,-Ofast -fno-fast-math,\
   $(1)))))
 endef
 
@@ -186,14 +202,11 @@ CLANG_QCOM_CONFIG_arm_TARGET_EXTRA_CPPFLAGS := \
 
 CLANG_QCOM_CONFIG_arm_TARGET_EXTRA_LDFLAGS := \
   $(CLANG_QCOM_CONFIG_LLVM_DEFAULT_FLAGS) \
+  $(CLANG_QCOM_CONFIG_KRAIT_MEM_FLAGS) \
+  $(CLANG_QCOM_CONFIG_KRAIT_PARALLEL_FLAGS) \
   -B$(CLANG_QCOM_CONFIG_arm_TARGET_TOOLCHAIN_PREFIX) \
   -target $(CLANG_QCOM_CONFIG_arm_TARGET_TRIPLE) \
-  $(CLANG_QCOM_VERBOSE) \
-  $(CLANG_QCOM_CONFIG_KRAIT_LDFLAGS)
-
-ifneq ($(USE_CLANG_QCOM_PARALLEL_ONLY_ON_SELECTED_MODULES),true)  
-  CLANG_QCOM_CONFIG_arm_TARGET_EXTRA_LDFLAGS += $(CLANG_QCOM_CONFIG_KRAIT_PARALLEL_FLAGS)
-endif
+  $(CLANG_QCOM_VERBOSE)
   
 CLANG_QCOM_TARGET_GLOBAL_CFLAGS := \
   $(call convert-to-clang-qcom-flags,$(TARGET_GLOBAL_CFLAGS)) \
@@ -204,46 +217,32 @@ CLANG_QCOM_TARGET_GLOBAL_CPPFLAGS := \
   $(CLANG_QCOM_CONFIG_arm_TARGET_EXTRA_CPPFLAGS)
 
 CLANG_QCOM_TARGET_GLOBAL_LDFLAGS := \
-  $(call convert-to-clang-qcom-ldflags,$(TARGET_GLOBAL_LDFLAGS)) \
-  $(CLANG_QCOM_CONFIG_arm_TARGET_EXTRA_LDFLAGS)
-
-
-
-### Set toolchain
-CLANG_QCOM_EXTRA := \
-  -mllvm -aggressive-jt \
-  -mllvm -arm-expand-memcpy-runtime=16 \
-  -mllvm -arm-opt-memcpy=1
-
-CLANG_QCOM := $(LLVM_PREBUILTS_PATH_QCOM)/clang$(BUILD_EXECUTABLE_SUFFIX) $(CLANG_QCOM_EXTRA)
-CLANG_QCOM_CXX := $(LLVM_PREBUILTS_PATH_QCOM)/clang++$(BUILD_EXECUTABLE_SUFFIX) $(CLANG_QCOM_EXTRA)
-
-LLVM_AS := $(LLVM_PREBUILTS_PATH_QCOM)/llvm-as$(BUILD_EXECUTABLE_SUFFIX) $(CLANG_QCOM_EXTRA)
-LLVM_LINK := $(LLVM_PREBUILTS_PATH_QCOM)/llvm-link$(BUILD_EXECUTABLE_SUFFIX) $(CLANG_QCOM_EXTRA)
-
-CLANG_QCOM_CONFIG_EXTRA_TARGET_C_INCLUDES := $(LLVM_PREBUILTS_HEADER_PATH_QCOM)
+  $(call convert-to-clang-qcom-flags,$(TARGET_GLOBAL_LDFLAGS)) \
+  $(CLANG_QCOM_CONFIG_arm_TARGET_EXTRA_LDFLAGS) \
+  -Wl,--gc-sections
 
 
 
 ### Define modules
 ifeq ($(CLANG_QCOM_COMPILE_ART),true)
   CLANG_QCOM_ART_MODULES := \
-    art \
-    libsigchain \
-    libart \
-    libart-compiler \
-    libartd \
-    libartd-compiler \
-    libart-disassembler \
-    libartd-disassembler \
-    core.art-host \
-    core.art \
-    cpplint-art-phony \
-    libnativebridgetest \
-    libarttest \
-    art-run-tests \
-    libart-gtest
-
+          art \
+          libsigchain \
+          libart \
+          libart-compiler \
+          libartd \
+          libartd-compiler \
+          libart-disassembler \
+          libartd-disassembler \
+          core.art-host \
+          core.art \
+          cpplint-art-phony \
+          libnativebridgetest \
+          libarttest \
+          art-run-tests \
+          libart-gtest
+else
+  CLANG_QCOM_ART_MODULES :=
 endif
 
 ifeq ($(CLANG_QCOM_COMPILE_BIONIC),true)
@@ -258,17 +257,28 @@ ifeq ($(CLANG_QCOM_COMPILE_BIONIC),true)
     libc \
     libc_common \
     libm \
-    libdl \
-    libc_gdtoa \
     libc_stack_protector \
     libc_tzcode \
     libc_dns \
     libc_freebsd \
     libc_netbsd \
-    libc_openbsd
-    #libc_malloc_debug_qemu
-    #libc_malloc_debug_leak
+    libc_openbsd \
+    libdl \
+    libc_gdtoa
 
+  CLANG_QCOM_BIONIC_MODULES_working := \
+    libc_cxa \
+    libc_syscalls \
+    libc_aeabi \
+    libstdc++ \
+    libc_nomalloc \
+    libc_malloc \
+    libc_bionic \
+    libc \
+    libc_common \
+    libm   
+else
+  CLANG_QCOM_BIONIC_MODULES :=
 endif
 
 ifeq ($(CLANG_QCOM_COMPILE_MIXED),true)
@@ -295,74 +305,72 @@ ifeq ($(CLANG_QCOM_COMPILE_MIXED),true)
     liblzo \
     zip \
     libbz \
+    libwebp-encode \
+    libwebp-decode \
     libstlport \
-    libstlport_static \
-    libgabi++
+    libstlport_static
+else
+  CLANG_QCOM_EXTRA_MODULES :=
+endif
 
-  CLANG_QCOM_EXTRA_MODULES += \
-    libion \
-    lib_core_neon_offsets \
-    libgui \
-    libui \
-    hwcStress \
-    hwcRects \
-    hwcColorEquiv \
-    hwcCommit \
-    gralloc.default \
-    hwcomposer.default \
-    audio.primary.default \
-    audio_policy.stub \
-    liboverlay \
-    math \
-    surfaceflinger
-
-  CLANG_QCOM_EXTRA_MODULES += \
-    libandroid \
-    libandroid_servers \
-    libcompiler_rt
-
-  CLANG_QCOM_EXTRA_MODULES += \
-    libpixman \
-    libmedia
-
-  CLANG_QCOM_EXTRA_MODULES += \
-    libjemalloc
-
-  CLANG_QCOM_EXTRA_MODULES_test_not_working += \
-    libcv \
-    libcvaux \
-    libcvml \
-    libcvhighgui \
-    libopencv \
-    stagefright \
-    record \
-    recordvideo \
-    screenrecord \
-    codec \
-    muxer \
-    libdownmix \
-    libeffects \
-    libvisualizer \
-    libmedia_helper \
-    libaudioparameter \
-    decoder \
-    libserviceutility \
-    libaudioresampler \
-    libaudio-resampler \
-    libaudiopolicymanagerdefault \
-    libaudiopolicymanager \
-    servicemanager \
-    halutil \
-    libhardware \
-    libqdMetaData \
-    libhdmi \
-    libqservice \
-    libOmxCore \
-    libmm-omxcore \
-    libstagefrighthw \
-    libdashplayer \
-    libutils
-
+ifeq ($(CLANG_QCOM_COMPILE_MORE_MIXED),true)
+CLANG_QCOM_EXTRA_MODULES += \
+  libion \
+  lib_core_neon_offsets \
+  libcompiler_rt \
+  libgui \
+  libui \
+  hwcStress \
+  hwcRects \
+  hwcColorEquiv \
+  hwcCommit \
+  gralloc.default \
+  hwcomposer.default \
+  audio.primary.default \
+  audio_policy.stub \
+  liboverlay \
+  math \
+  libcv \
+  libcvaux \
+  libcvml \
+  libcvhighgui \
+  libopencv \
+  libpixman \
+  stagefright \
+  record \
+  recordvideo \
+  screenrecord \
+  codec \
+  muxer \
+  libdownmix \
+  libeffects \
+  libvisualizer \
+  libmedia_helper \
+  libaudioparameter \
+  libmedia\
+  decoder \
+  libserviceutility \
+  libaudioresampler \
+  libaudio-resampler \
+  libaudiopolicymanagerdefault \
+  libaudiopolicymanager \
+  libandroid_servers \
+  servicemanager \
+  surfaceflinger \
+  halutil \
+  libhardware \
+  libqdMetaData \
+  libhdmi \
+  libqservice \
+  memtrack.msm8974 \
+  keystore.msm8974 \
+  libOmxCore \
+  libmm-omxcore \
+  libstagefrighthw \
+  libdashplayer \
+  libutils \
+  libgabi++ \
+  libandroid
 endif
 
 # Here you can overwrite which modules should be compiled with QCOM CLANG instead of GCC
@@ -375,17 +383,22 @@ CLANG_QCOM_FORCE_COMPILE_MODULES += \
 CLANG_QCOM_FORCE_COMPILE_ACLANG_MODULES +=
 
 # -fparallel where to use? see 3.6.4
-# Modules that dont like -fparallel
-CLANG_QCOM_DONT_USE_PARALLEL_MODULES := \
-  libc_gdtoa \
-  libm \
-  libc_tzcode \
-  libc_dns \
-  libc_freebsd \
-  libc_netbsd \
-  libc_openbsd \
-  libc_stack_protector \
-  libjemalloc
+# Only use on selected modules. NOT USED AT THE MOMENT!
+CLANG_QCOM_USE_PARALLEL_MODULES += \
+  libpng \
+  libsigchain \
+  libcompiler_rt-extras \
+  libcompiler_rt \
+  $(ART_MODULES) \
+  $(BIONIC_MODULES) \
+  $(EXTRA_MODULES)
+
+# Modules for language mode C++11
+CLANG_QCOM_C++11_MODULES += \
+  libjni_latinime_common_static \
+  libjni_latinime
+
+CLANG_QCOM_GNU++11_MODULES +=
 
 # Dont use CLANG Assembler. Use GCC Assembler instead
 # https://android-review.googlesource.com/#/c/110170/
@@ -394,16 +407,6 @@ CLANG_QCOM_DONT_USE_INTEGRATED_AS_MODULES += \
   libskia \
   libc++abi
 
-<<<<<<< HEAD
-# Modules for language mode C++11
-CLANG_QCOM_C++11_MODULES += \
-  libjni_latinime_common_static \
-  libjni_latinime
-
-# Modules for language mode G++11
-CLANG_QCOM_GNU++11_MODULES +=
-
-#CLANG_QCOM_DONT_REPLACE_WITH_Ofast_MODULES +=
 CLANG_QCOM_DONT_REPLACE_WITH_Ofast_MODULES +=
 
 # Workaround for modules where global definition of -Os ist overwritten with a higher optimization in local definition
@@ -421,8 +424,4 @@ CLANG_QCOM_NO-ALIGN-OS_MODULES += \
   ndc \
   libnativebridge
 
-CLANG_QCOM_DONT_USE_MODULES := \
-                        ndc
-
-CLANG_QCOM_NO-ALIGN-OS_MODULES := 
-
+CLANG_QCOM_NO-ALIGN-OS_MODULES :=
