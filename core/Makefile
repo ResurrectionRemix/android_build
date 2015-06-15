@@ -1705,6 +1705,31 @@ bacon: otapackage
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(CM_TARGET_PACKAGE)
 	$(hide) $(MD5SUM) $(CM_TARGET_PACKAGE) > $(CM_TARGET_PACKAGE).md5sum
 	@echo -e ${CL_CYN}"Package Complete: $(CM_TARGET_PACKAGE)"${CL_RST}
+	@echo -e ${CL_CYN} ""${CL_RST}
+	@echo -e ${CL_CYN} ""${CL_RST}
+	@echo -e ${CL_CYN} "      (         (           (    (                       (        )      )  "${CL_RST}
+	@echo -e ${CL_CYN} "      )\ )      )\ )        )\ ) )\ )        (     *   ) )\ )  ( /(   ( /(  "${CL_RST}
+	@echo -e ${CL_CYN} "     (()/( (   (()/(    (  (()/((()/( (      )\    )  /((()/(  )\())  )\()) "${CL_RST}
+	@echo -e ${CL_CYN} "      /(_)))\   /(_))   )\  /(_))/(_)))\   (((_)  ( )(_))/(_))((_)\  ((_)\  "${CL_RST}
+	@echo -e ${CL_CYN} "     (_)) ((_) (_))  _ ((_)(_)) (_)) ((_)  )\___ (_(_())(_))    ((_)  _((_) "${CL_RST}
+	@echo -e ${CL_CYN} "     | _ \| __|/ __|| | | || _ \| _ \| __|((/ __||_   _||_ _|  / _ \ | \| | "${CL_RST}
+	@echo -e ${CL_CYN} "     |   /| _| \__ \| |_| ||   /|   /| _|  | (__   | |   | |  | (_) || .  | "${CL_RST}
+	@echo -e ${CL_CYN} "     |_|_\|___||___/ \___/ |_|_\|_|_\|___|  \___|  |_|  |___|  \___/ |_|\_| "${CL_RST}
+	@echo -e ${CL_CYN} ""${CL_RST}
+	@echo -e ${CL_CYN} ""${CL_RST}
+	@echo -e ${CL_CYN} "                         (           *     (        )                       "${CL_RST}
+	@echo -e ${CL_CYN} "                         )\ )      (       )\ )  ( /(                       "${CL_RST}
+	@echo -e ${CL_CYN} "                        (()/( (    )\))(  (()/(  )\())                      "${CL_RST}
+	@echo -e ${CL_CYN} "                         /(_)))\  ((_)()\  /(_))((_)\                       "${CL_RST}
+	@echo -e ${CL_CYN} "                        (_)) ((_) (_()((_)(_))  __((_)                      "${CL_RST}
+	@echo -e ${CL_CYN} "                        | _ \| __||  \/  ||_ _| \ \/ /                      "${CL_RST}
+	@echo -e ${CL_CYN} "                        |   /| _| | |\/| | | |   >  <                       "${CL_RST}
+	@echo -e ${CL_CYN} "                        |_|_\|___||_|  |_||___| /_/\_\                      "${CL_RST}
+	@echo -e ${CL_CYN} ""${CL_RST}
+	@echo -e ${CL_CYN} ""${CL_RST}
+	@echo -e ${CL_CYN} ""${CL_RST}
+	@echo -e ${CL_CYN} ""${CL_RST}
+
 
 # -----------------------------------------------------------------
 # The factory package
