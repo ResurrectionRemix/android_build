@@ -268,3 +268,4 @@ CLANG_QCOM_DONT_USE_LTO_MODULES := \
 
 #when NOT to use CLANG_QCOM
 CLANG_QCOM_DONT_USE_MODULES := \
+                        ndc

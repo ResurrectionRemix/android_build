@@ -51,7 +51,8 @@ CLANG_QCOM_CONFIG_arm_UNKNOWN_CFLAGS := \
 -frename-registers \
 -finline-functions \
 -fno-strict-volatile-bitfields \
--fno-unswitch-loops
+-fno-unswitch-loops \
+-fno-if-conversion
 
 define subst-clang-qcom-incompatible-arm-flags
   $(subst -march=armv5te,-mcpu=krait,\
