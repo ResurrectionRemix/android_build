@@ -424,4 +424,7 @@ CLANG_QCOM_NO-ALIGN-OS_MODULES += \
   ndc \
   libnativebridge
 
-CLANG_QCOM_NO-ALIGN-OS_MODULES :=
+CLANG_QCOM_DONT_USE_MODULES := \
+                        ndc
+
+CLANG_QCOM_NO-ALIGN-OS_MODULES := 
