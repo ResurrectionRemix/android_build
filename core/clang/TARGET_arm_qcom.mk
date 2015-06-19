@@ -394,6 +394,7 @@ CLANG_QCOM_DONT_USE_INTEGRATED_AS_MODULES += \
   libskia \
   libc++abi
 
+<<<<<<< HEAD
 # Modules for language mode C++11
 CLANG_QCOM_C++11_MODULES += \
   libjni_latinime_common_static \
@@ -403,3 +404,25 @@ CLANG_QCOM_C++11_MODULES += \
 CLANG_QCOM_GNU++11_MODULES +=
 
 #CLANG_QCOM_DONT_REPLACE_WITH_Ofast_MODULES +=
+CLANG_QCOM_DONT_REPLACE_WITH_Ofast_MODULES +=
+
+# Workaround for modules where global definition of -Os ist overwritten with a higher optimization in local definition
+CLANG_QCOM_NO-ALIGN-OS_MODULES += \
+  libbccRenderscript \
+  libLLVMSupport \
+  libLLVMMC \
+  libLLVMOption \
+  libLLVMSupport \
+  libLLVMMC \
+  libLLVMTarget \
+  libLLVMBitWriter_3_2 \
+  libbcinfo \
+  libbccCore \
+  ndc \
+  libnativebridge
+
+CLANG_QCOM_DONT_USE_MODULES := \
+                        ndc
+
+CLANG_QCOM_NO-ALIGN-OS_MODULES := 
+
