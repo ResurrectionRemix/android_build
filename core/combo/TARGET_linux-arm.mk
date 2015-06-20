@@ -192,12 +192,15 @@ TARGET_LTO_CFLAGS += \
        -D__LTO__ \
        -fwhopr \
        -flto-compression-level=$(LTO_COMPRESSION_LEVEL) \
-       -fuse-ld=gold \
-       -flto-report
+       -flto-report \
+       -c-lto \
+       -lto 
 
 TARGET_LTO_LDFLAGS += \
-       $(TARGET_LTO_CFLAGS) \
-       -Wl,-flto
+       -Wl,-flto \
+       -Wl,-plugin-opt=also-emit-llvm \
+       -fuse-ld=gold \
+       $(TARGET_LTO_CFLAGS)
 endif
 
 KERNEL_HEADERS_COMMON := $(libc_root)/kernel/uapi
