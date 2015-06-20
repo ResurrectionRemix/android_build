@@ -74,7 +74,7 @@ FORCE:
 
 # These goals don't need to collect and include Android.mks/CleanSpec.mks
 # in the source tree.
-dont_bother_goals := clean clobber dataclean installclean \
+dont_bother_goals := clean clobber dataclean deviceclean installclean \
     help out \
     snod systemimage-nodeps \
     stnod systemtarball-nodeps \
@@ -1092,6 +1092,12 @@ clean:
 
 .PHONY: clobber
 clobber: clean
+
+# Clears out only target files
+.PHONY: deviceclean
+deviceclean:
+	@rm -rf $(OUT_DIR)/target/product/$(TARGET_DEVICE)
+	@echo -e ${CL_GRN}"$(TARGET_DEVICE) files removed successfully"${CL_RST}
 
 # The rules for dataclean and installclean are defined in cleanbuild.mk.
 
