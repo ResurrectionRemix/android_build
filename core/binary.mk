@@ -983,7 +983,7 @@ installed_static_library_notice_file_targets := \
 
 # Default is -fno-rtti.
 ifeq ($(strip $(LOCAL_RTTI_FLAG)),)
-LOCAL_RTTI_FLAG := -fno-rtti
+LOCAL_RTTI_FLAG := -fno-rtti -D_LIBCPP_NO_RTTI
 endif
 
 ###########################################################
