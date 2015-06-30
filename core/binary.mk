@@ -294,10 +294,7 @@ my_target_global_cppflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_C
 my_target_global_ldflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_LDFLAGS)
 my_target_c_includes += $(CLANG_CONFIG_EXTRA_TARGET_C_INCLUDES)
 ifeq ($(USE_CLANG_QCOM),true)
-  include $(BUILD_SYSTEM)/clang/clang_qcom.mk
-else
-  $(combo_2nd_arch_prefix)TARGET_LIBGCC := $(shell $($(combo_2nd_arch_prefix)TARGET_CC) \
-        $($(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS) -print-libgcc-file-name)
+  include $(BUILD_SYSTEM)/clang/clang_qcom_global.mk
 endif
 else
 my_target_global_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_GLOBAL_CFLAGS)
@@ -423,8 +420,7 @@ normal_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host
   ifeq ($(USE_CLANG_QCOM),true)
     ifndef LOCAL_IS_HOST_MODULE
       ifneq ($(LOCAL_MODULE),$(filter $(LOCAL_MODULE),$(CLANG_QCOM_DONT_USE_MODULES)))
-        arm_objects_cflags := $(arm_objects_cflags_CLANG_QCOM)
-        normal_objects_cflags := $(normal_objects_cflags_CLANG_QCOM)
+        include $(BUILD_SYSTEM)/clang/clang_qcom_objects.mk
       endif
     endif 
   endif
@@ -991,10 +987,7 @@ my_ldflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flag
   ifeq ($(USE_CLANG_QCOM),true)
     ifndef LOCAL_IS_HOST_MODULE
       ifneq ($(LOCAL_MODULE),$(filter $(LOCAL_MODULE),$(CLANG_QCOM_DONT_USE_MODULES)))
-      my_cflags := $(my_cflags_CLANG_QCOM)
-      my_cppflags := $(my_cppflags_CLANG_QCOM)
-      my_asflags := $(my_asflags_CLANG_QCOM)
-      my_ldflags := $(my_ldflags_CLANG_QCOM)
+        include $(BUILD_SYSTEM)/clang/clang_qcom_local.mk
       endif
     endif
    endif
