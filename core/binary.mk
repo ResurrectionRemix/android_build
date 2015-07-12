@@ -97,6 +97,7 @@ else
   endif
 endif
 
+
 # Include custom gcc flags.  Seperate them so they can be easily managed.
 ifeq (strip $(RR_STRICT)),true)
 include $(BUILD_SYSTEM)/strict.mk
@@ -119,6 +120,12 @@ endif
 endif
 endif
 endif
+ifeq ($(USE_CLANG_QCOM),true)
+  ifndef LOCAL_IS_HOST_MODULE
+    ifeq ($(LOCAL_MODULE),$(filter $(LOCAL_MODULE),$(CLANG_QCOM_FORCE_COMPILE_MODULES)))
+      LOCAL_CLANG := true
+    endif
+  endif
 endif
 
 # The following LOCAL_ variables will be modified in this file.
@@ -289,10 +296,14 @@ my_target_global_cppflags :=
 endif # LOCAL_SDK_VERSION
 
 ifeq ($(my_clang),true)
-my_target_global_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_CFLAGS)
-my_target_global_cppflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_CPPFLAGS)
-my_target_global_ldflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_LDFLAGS)
-my_target_c_includes += $(CLANG_CONFIG_EXTRA_TARGET_C_INCLUDES)
+  ifeq ($(USE_CLANG_QCOM)$(filter $(LOCAL_MODULE),$(CLANG_QCOM_DONT_USE_MODULES)),true)
+    include $(BUILD_SYSTEM)/clang/clang_qcom_global.mk
+  else
+    my_target_c_includes += $(CLANG_CONFIG_EXTRA_TARGET_C_INCLUDES)
+    my_target_global_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_CFLAGS)
+    my_target_global_cppflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_CPPFLAGS)
+    my_target_global_ldflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_LDFLAGS)
+  endif
 else
 my_target_global_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_GLOBAL_CFLAGS)
 my_target_global_cppflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_GLOBAL_CPPFLAGS)
@@ -412,8 +423,17 @@ normal_objects_mode := $(if $(LOCAL_ARM_MODE),$(LOCAL_ARM_MODE),thumb)
 arm_objects_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)$(my_prefix)$(arm_objects_mode)_CFLAGS)
 normal_objects_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)$(my_prefix)$(normal_objects_mode)_CFLAGS)
 ifeq ($(strip $(my_clang)),true)
-arm_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(arm_objects_cflags))
-normal_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(normal_objects_cflags))
+    ifndef LOCAL_IS_HOST_MODULE
+      ifeq ($(USE_CLANG_QCOM)$(filter $(LOCAL_MODULE),$(CLANG_QCOM_DONT_USE_MODULES)),true)
+        include $(BUILD_SYSTEM)/clang/clang_qcom_objects.mk
+      else
+        arm_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(arm_objects_cflags))
+        normal_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(normal_objects_cflags))
+      endif
+    else
+      arm_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(arm_objects_cflags))
+      normal_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(normal_objects_cflags))
+    endif
 endif
 
 else
@@ -970,10 +990,21 @@ endif
 ###########################################################
 
 ifeq ($(my_clang),true)
-my_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_cflags))
-my_cppflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_cppflags))
-my_asflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_asflags))
-my_ldflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_ldflags))
+  ifndef LOCAL_IS_HOST_MODULE
+    ifeq ($(USE_CLANG_QCOM)$(filter $(LOCAL_MODULE),$(CLANG_QCOM_DONT_USE_MODULES)),true)
+        include $(BUILD_SYSTEM)/clang/clang_qcom_local.mk
+    else
+      my_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_cflags))
+      my_cppflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_cppflags))
+      my_asflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_asflags))
+      my_ldflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_ldflags))
+    endif
+  else
+    my_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_cflags))
+    my_cppflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_cppflags))
+    my_asflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_asflags))
+    my_ldflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_ldflags))
+  endif
 endif
 
 ifeq ($(LOCAL_FDO_SUPPORT), true)
