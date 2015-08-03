@@ -1403,6 +1403,11 @@ DISTTOOLS :=  $(HOST_OUT_EXECUTABLES)/minigzip \
 	  $(HOST_OUT_EXECUTABLES)/append2simg \
 	  $(HOST_OUT_EXECUTABLES)/boot_signer
 
+ifeq ($(HOST_OS),linux)
+  DISTTOOLS += $(HOST_OUT_EXECUTABLES)/mkf2fsuserimg.sh \
+	$(HOST_OUT_EXECUTABLES)/make_f2fs
+endif
+
 OTATOOLS := $(DISTTOOLS) \
 	  $(HOST_OUT_EXECUTABLES)/aapt
 
