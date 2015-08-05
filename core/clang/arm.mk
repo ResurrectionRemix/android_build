@@ -30,39 +30,3 @@ define subst-clang-incompatible-arm-flags
   $(subst -mcpu=cortex-a15,-march=armv7-a,\
   $(1))))
 endef
-
-# QUALCOMM CLANG
-CLANG_QCOM_CONFIG_arm_UNKNOWN_CFLAGS := \
--fipa-pta \
--fsection-anchors \
--ftree-loop-im \
--ftree-loop-ivcanon \
--fno-canonical-system-headers \
--frerun-cse-after-loop \
--fgcse-las \
--fgcse-sm \
--fivopts \
--frename-registers \
--ftracer \
--funsafe-loop-optimizations \
--funswitch-loops \
--fweb \
--fgcse-after-reload \
--frename-registers \
--finline-functions \
--fno-strict-volatile-bitfields \
--fno-unswitch-loops
-
-define subst-clang-qcom-incompatible-arm-flags
-  $(subst -march=armv5te,-mcpu=krait,\
-  $(subst -march=armv5e,-mcpu=krait,\
-  $(subst -march=armv7,-mcpu=krait,\
-  $(subst -march=armv7-a,-mcpu=krait,\
-  $(subst -mcpu=cortex-a15,-mcpu=krait,\
-  $(subst -mtune=cortex-a15,-mcpu=krait,\
-  $(subst -mfpu=cortex-a8,-mcpu=scorpion,\
-  $(subst -O3,-Ofast -fno-fast-math,\
-  $(subst -Os,-Os -falign-os,\
-  $(subst -mfpu=neon,-mfpu=neon-vfpv4,\
-  $(1)))))))))))
-endef

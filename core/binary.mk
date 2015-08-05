@@ -270,9 +270,6 @@ my_target_global_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_CFL
 my_target_global_cppflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_CPPFLAGS)
 my_target_global_ldflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_LDFLAGS)
 my_target_c_includes += $(CLANG_CONFIG_EXTRA_TARGET_C_INCLUDES)
-ifeq ($(USE_CLANG_QCOM),true)
-  include $(BUILD_SYSTEM)/clang/clang_qcom_global.mk
-endif
 else
 my_target_global_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_GLOBAL_CFLAGS)
 my_target_global_cppflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_GLOBAL_CPPFLAGS)
@@ -394,13 +391,6 @@ normal_objects_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)$(my_prefix)$(normal_obje
 ifeq ($(strip $(my_clang)),true)
 arm_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(arm_objects_cflags))
 normal_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(normal_objects_cflags))
-  ifeq ($(USE_CLANG_QCOM),true)
-    ifndef LOCAL_IS_HOST_MODULE
-      ifneq ($(LOCAL_MODULE),$(filter $(LOCAL_MODULE),$(CLANG_QCOM_DONT_USE_MODULES)))
-        include $(BUILD_SYSTEM)/clang/clang_qcom_objects.mk
-      endif
-    endif 
-  endif
 endif
 
 else
@@ -961,13 +951,6 @@ my_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags
 my_cppflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_cppflags))
 my_asflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_asflags))
 my_ldflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(my_ldflags))
-  ifeq ($(USE_CLANG_QCOM),true)
-    ifndef LOCAL_IS_HOST_MODULE
-      ifneq ($(LOCAL_MODULE),$(filter $(LOCAL_MODULE),$(CLANG_QCOM_DONT_USE_MODULES)))
-        include $(BUILD_SYSTEM)/clang/clang_qcom_local.mk
-      endif
-    endif
-   endif
 endif
 
 ifeq ($(LOCAL_FDO_SUPPORT), true)
