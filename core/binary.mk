@@ -120,6 +120,7 @@ endif
 endif
 endif
 endif
+endif
 ifeq ($(USE_CLANG_QCOM),true)
   ifndef LOCAL_IS_HOST_MODULE
     ifeq ($(LOCAL_MODULE),$(filter $(LOCAL_MODULE),$(CLANG_QCOM_FORCE_COMPILE_MODULES)))
