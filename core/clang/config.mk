@@ -130,8 +130,3 @@ ADDRESS_SANITIZER_CONFIG_EXTRA_STATIC_LIBRARIES := libasan
 # This allows us to use the superset of functionality that compiler-rt
 # provides to Clang (for supporting features like -ftrapv).
 COMPILER_RT_CONFIG_EXTRA_STATIC_LIBRARIES := libcompiler_rt-extras
-
-# Use Snapdragon LLVM Compiler for Android
-ifeq ($(USE_CLANG_QCOM),true)
-include $(BUILD_SYSTEM)/clang/TARGET_arm_qcom.mk
-endif
