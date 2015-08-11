@@ -35,10 +35,10 @@ TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT := armv5te
 endif
 
 # Decouple NDK library selection with platform compiler version
-$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 5.1
+$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.9
 
 ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
-$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 5.1
+$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 4.9
 else
 $(combo_2nd_arch_prefix)TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
 endif
@@ -110,7 +110,7 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
 			-I $(dir $(android_config_h))
 
 # More flags/options can be added here
-$(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
+TARGET_GLOBAL_CFLAGS += \
 			-DNDEBUG \
 			-Wstrict-aliasing=2 \
 			-fgcse-after-reload \
@@ -125,16 +125,6 @@ ifneq ($(filter 4.6 4.6.% 4.7 4.7.% 4.8 4.8.% 4.9 4.9.%, $($(combo_2nd_arch_pref
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -fno-builtin-sin \
 			-fno-strict-volatile-bitfields
 endif
-
-# arter97
-$(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
-			-w \
-			-O3 \
-			-fno-inline-functions \
-			-funroll-loops \
-			-mvectorize-with-neon-quad
-
-
 # This is to avoid the dreaded warning compiler message:
 #   note: the mangling of 'va_list' has changed in GCC 4.4
 #
@@ -301,4 +291,3 @@ $(hide) $(PRIVATE_CXX) -nostdlib -Bstatic \
 	-Wl,--end-group \
 	$(if $(filter true,$(PRIVATE_NO_CRT)),,$(PRIVATE_TARGET_CRTEND_O))
 endef
-
