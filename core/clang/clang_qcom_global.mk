@@ -4,8 +4,7 @@ my_target_global_cflags := $(CLANG_QCOM_TARGET_GLOBAL_CFLAGS)
 my_target_global_cppflags := $(CLANG_QCOM_TARGET_GLOBAL_CPPFLAGS)
 my_target_global_ldflags := $(CLANG_QCOM_TARGET_GLOBAL_LDFLAGS)
 
-# -fparallel documentation 3.6.4
-ifeq ($(USE_CLANG_QCOM_ONLY_ON_SELECTED_MODULES)$(LOCAL_MODULE),true$(filter $(LOCAL_MODULE),$(CLANG_QCOM_USE_PARALLEL_MODULES)))
+ifneq ($(LOCAL_MODULE),$(filter $(LOCAL_MODULE),$(CLANG_QCOM_DONT_USE_PARALLEL_MODULES)))
 my_target_global_cflags += $(CLANG_QCOM_CONFIG_KRAIT_PARALLEL_FLAGS)
 my_target_global_cppflags += $(CLANG_QCOM_CONFIG_KRAIT_PARALLEL_FLAGS)
 my_target_global_ldflags += $(CLANG_QCOM_CONFIG_KRAIT_PARALLEL_FLAGS)

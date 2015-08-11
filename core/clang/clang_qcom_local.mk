@@ -14,13 +14,12 @@ endif
 # Flags and linking
 my_cflags += $(CLANG_QCOM_CONFIG_KRAIT_Ofast_FLAGS)
 my_cppflags += $(CLANG_QCOM_CONFIG_KRAIT_Ofast_FLAGS)
-my_ldflags += $(CLANG_QCOM_CONFIG_KRAIT_FLAGS) -Wl,--gc-sections
+my_ldflags += $(CLANG_QCOM_CONFIG_KRAIT_LDFLAGS)
 LOCAL_CONLYFLAGS += $(CLANG_QCOM_CONFIG_KRAIT_Ofast_FLAGS)  
 # Set different mcpu for GCC Assembler because it doesnt know -mcpu=krait and defaults to -march=armv7-a
 my_asflags += $(clang_qcom_mcpu_as)
 
-# -fparallel documentation 3.6.4
-ifeq ($(USE_CLANG_QCOM_ONLY_ON_SELECTED_MODULES)$(LOCAL_MODULE),true$(filter $(LOCAL_MODULE),$(CLANG_QCOM_USE_PARALLEL_MODULES)))
+ifneq ($(LOCAL_MODULE),$(filter $(LOCAL_MODULE),$(CLANG_QCOM_DONT_USE_PARALLEL_MODULES)))
 my_cflags += $(CLANG_QCOM_CONFIG_KRAIT_PARALLEL_FLAGS)
 my_cppflags += $(CLANG_QCOM_CONFIG_KRAIT_PARALLEL_FLAGS)
 my_asflags += $(CLANG_QCOM_CONFIG_KRAIT_PARALLEL_FLAGS)

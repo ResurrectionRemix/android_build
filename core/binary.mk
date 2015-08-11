@@ -97,7 +97,6 @@ else
   endif
 endif
 
-
 # Include custom gcc flags.  Seperate them so they can be easily managed.
 ifeq (strip $(RR_STRICT)),true)
 include $(BUILD_SYSTEM)/strict.mk
@@ -121,12 +120,17 @@ endif
 endif
 endif
 endif
+
 ifeq ($(USE_CLANG_QCOM),true)
   ifndef LOCAL_IS_HOST_MODULE
     ifeq ($(LOCAL_MODULE),$(filter $(LOCAL_MODULE),$(CLANG_QCOM_FORCE_COMPILE_MODULES)))
       LOCAL_CLANG := true
     endif
+    #ifneq ($(LOCAL_CLANG),true)
+    #  $(info gcc target module: $(LOCAL_MODULE))
+    #endif
   endif
+
 endif
 
 # The following LOCAL_ variables will be modified in this file.
