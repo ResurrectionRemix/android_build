@@ -212,7 +212,7 @@ $(combo_2nd_arch_prefix)TARGET_LIBATOMIC := $(shell $($(combo_2nd_arch_prefix)TA
 endif
 
 # Define LTO (Link-Time Optimization) options.
-ifeq ($(strip $(RR_LTO)),true)
+ifeq ($(strip $(LOCAL_LTO)),true)
 TARGET_LTO_CFLAGS += \
        -flto \
        -fno-toplevel-reorder \
