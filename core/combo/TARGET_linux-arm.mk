@@ -38,7 +38,7 @@ endif
 $(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 5.1
 
 ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
-$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 5.1-linaro
+$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 5.1
 else
 $(combo_2nd_arch_prefix)TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
 endif
