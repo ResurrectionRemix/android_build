@@ -122,6 +122,11 @@ ifdef RR_KRAIT
 $(info   RR_KRAIT=$(RR_KRAIT))
 else
 $(info   RR_KRAIT=false)
+ifneq (,$(filter true, $(CYNGN_TARGET) $(EXTERNAL_CLEAN_TARGET)))
+ifeq ($(CYNGN_TARGET), true)
+$(info   CYNGN_TARGET=$(CYNGN_TARGET))
+endif
+$(info   CYNGN_FEATURES=$(CYNGN_FEATURES))
 endif
 $(info ============================================)
 endif
