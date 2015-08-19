@@ -216,29 +216,6 @@ endif
 
 my_compiler_dependencies :=
 
-
-####################################################
-## Add LTO flags if LTO is turned on/supported
-## and we aren't building a host module.
-####################################################
-ifeq ($(strip $(LOCAL_LTO)),true)
- ifeq (1,$(words $(filter $(LOCAL_DISABLE_LTO),$(LOCAL_MODULE))))
-   ifneq ($(strip $(LOCAL_CLANG)),true)
-     ifeq ($(strip $(LOCAL_IS_HOST_MODULE)),)
-        my_cflags_CLANG_QCOM += $(TARGET_LTO_CFLAGS)
-        my_ldflags_CLANG_QCOM += $(TARGET_LTO_LDFLAGS)
-        my_cppflags_CLANG_QCOM += $(TARGET_LTO_CFLAGS)
-        my_asflags_CLANG_QCOM += $(TARGET_LTO_CFLAGS)
-        my_target_global_cflags += $(TARGET_LTO_CFLAGS)
-        my_target_global_cppflags += $(TARGET_LTO_CFLAGS)
-        my_target_global_ldflags += $(TARGET_LTO_LDFLAGS)
-        LOCAL_CONLYFLAGS += $(TARGET_LTO_CFLAGS)
-        LOCAL_CPPFLAGS += $(TARGET_LTO_CFLAGS)
-      endif
-    endif
-  endif
-endif
-
 ##################################################################
 ## Add FDO flags if FDO is turned on and supported
 ## Please note that we will do option filtering during FDO build.
