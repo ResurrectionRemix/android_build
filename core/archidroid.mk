@@ -40,8 +40,7 @@ ARCHIDROID_GCC_CFLAGS := -O3 -fgcse-las -fgcse-sm -fipa-pta -fivopts -fomit-fram
 # Current setup is based on proposed androideabi toolchain
 # Results with other toolchains may vary
 
-# These flags work fine in suggested compiler, but may cause ICEs in other compilers, comment if needed
-ARCHIDROID_GCC_CFLAGS += -fgraphite -fgraphite-identity
+
 
 # The following flags (-floop) require that your GCC has been configured with --with-isl
 # Additionally, applying any of them will most likely cause ICE in your compiler, so they're disabled
@@ -80,8 +79,6 @@ ARCHIDROID_CLANG_UNKNOWN_FLAGS := \
   -fgcse-after-reload \
   -fgcse-las \
   -fgcse-sm \
-  -fgraphite \
-  -fgraphite-identity \
   -fipa-pta \
   -floop-block \
   -floop-interchange \
