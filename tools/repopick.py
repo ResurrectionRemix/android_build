@@ -55,8 +55,10 @@ def fetch_query_via_ssh(remote_url, query):
        We have to get the data, then transform it to match what we're expecting from the HTTP RESET API"""
     if remote_url.count(':') == 2:
         (uri, userhost, port) = remote_url.split(':')
+        userhost = userhost[2:]
     elif remote_url.count(':') == 1:
         (uri, userhost) = remote_url.split(':')
+        userhost = userhost[2:]
         port = 29418
     else:
         raise Exception('Malformed URI: Expecting ssh://[user@]host[:port]')
@@ -88,7 +90,7 @@ def fetch_query_via_ssh(remote_url, query):
                 'status': data['status']
             }
             reviews.append(review)
-        except ValueError:
+        except:
             pass
     print('Found {0} reviews'.format(len(reviews)))
     return reviews
@@ -109,7 +111,7 @@ def fetch_query_via_http(remote_url, query):
 
 def fetch_query(remote_url, query):
     """Wrapper for fetch_query_via_proto functions"""
-    if remote_url[0:2] == 'ssh':
+    if remote_url[0:3] == 'ssh':
         return fetch_query_via_ssh(remote_url, query)
     elif remote_url[0:4] == 'http':
         return fetch_query_via_http(remote_url, query.replace(' ', '+'))
@@ -139,7 +141,7 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--auto-branch', action='store_true', help='shortcut to "--start-branch auto --abandon-first --ignore-missing"')
     parser.add_argument('-q', '--quiet', action='store_true', help='print as little as possible')
     parser.add_argument('-v', '--verbose', action='store_true', help='print extra information to aid in debug')
-    parser.add_argument('-f', '--force', action='store_true', help='force cherry pick even if commit has been merged')
+    parser.add_argument('-f', '--force', action='store_true', help='force cherry pick even if change is closed')
     parser.add_argument('-p', '--pull', action='store_true', help='execute pull instead of cherry-pick')
     parser.add_argument('-t', '--topic', help='pick all commits from a specified topic')
     parser.add_argument('-Q', '--query', help='pick all commits using the specified query')
@@ -247,12 +249,12 @@ if __name__ == '__main__':
 
     for item in mergables:
         print('Applying change number {0}...'.format(item['id']))
-        # Check if commit has already been merged and exit if it has, unless -f is specified
-        if item['status'] == 'MERGED':
+        # Check if change is open and exit if it's not, unless -f is specified
+        if (item['status'] != 'OPEN' and item['status'] != 'NEW') and not args.query:
             if args.force:
-                print('!! Force-picking a merged commit !!\n')
+                print('!! Force-picking a closed change !!\n')
             else:
-                print('Commit already merged. Skipping the cherry pick.\nUse -f to force this pick.')
+                print('Change is closed. Skipping the cherry pick.\nUse -f to force this pick.')
                 continue
 
         # Convert the project name to a project path
@@ -281,6 +283,10 @@ if __name__ == '__main__':
                     # audio and media are different from display
                     elif split_path[2] == 'audio' or split_path[2] == 'media':
                         project_path += '/default'
+            elif project_path.startswith('hardware/ril'):
+                project_path = project_path.rstrip('-caf')
+                if item["branch"].split('-')[-1] == 'caf':
+                    project_path += '-caf'
         elif args.ignore_missing:
             print('WARNING: Skipping {0} since there is no project directory for: {1}\n'.format(item['id'], item['project']))
             continue
