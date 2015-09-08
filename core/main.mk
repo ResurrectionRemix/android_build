@@ -143,6 +143,7 @@ $(warning ************************************************************)
 $(error Directory names containing spaces not supported)
 endif
 
+
 java_version_str := $(shell unset _JAVA_OPTIONS && unset JAVA_TOOL_OPTIONS && java -version 2>&1)
 javac_version_str := $(shell unset _JAVA_OPTIONS && unset JAVA_TOOL_OPTIONS && javac -version 2>&1)
 

@@ -62,4 +62,3 @@ endif
 
 # Export cflags and cpu variant to the kernel.
 export kernel_arch_variant_cflags := $(arch_variant_cflags)
-
