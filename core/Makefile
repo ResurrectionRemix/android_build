@@ -1924,7 +1924,16 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 
 CM_TARGET_PACKAGE := $(PRODUCT_OUT)/$(CM_VERSION).zip
 
-.PHONY: otapackage bacon
+BOOT_ZIP_FROM_IMAGE_SCRIPT := ./build/tools/releasetools/boot_flash_from_image
+KERNEL_PATH := $(TARGET_KERNEL_SOURCE)/arch/arm/configs/$(TARGET_KERNEL_CONFIG)
+
+.PHONY: bootzip otapackage bacon
+bootzip: bootimage
+	$(BOOT_ZIP_FROM_IMAGE_SCRIPT) \
+	   $(recovery_fstab) \
+	   $(OUT) \
+	   $(TARGET_DEVICE)
+
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(CM_TARGET_PACKAGE)
