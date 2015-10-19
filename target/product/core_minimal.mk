@@ -76,6 +76,7 @@ PRODUCT_PACKAGES += \
     uncrypt \
     voip-common \
     webview \
+    WebViewGoogle \
     wifi-service
 
 PRODUCT_COPY_FILES += \
