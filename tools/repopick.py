@@ -273,10 +273,9 @@ if __name__ == '__main__':
 
         # Convert the project name to a project path
         #   - check that the project path exists
-        project_path = None
-
         if item['project'] in project_name_to_data and item['branch'] in project_name_to_data[item['project']]:
             project_path = project_name_to_data[item['project']][item['branch']]
+        project_path = None
         elif args.path:
             project_path = args.path
         elif args.ignore_missing:
