@@ -21,7 +21,9 @@ echo "ro.build.tags=$BUILD_VERSION_TAGS"
 echo "ro.build.flavor=$TARGET_BUILD_FLAVOR"
 echo "ro.product.brand=$PRODUCT_BRAND"
 echo "ro.product.name=$PRODUCT_NAME"
-echo "ro.product.board=$TARGET_BOOTLOADER_BOARD_NAME"
+if [ -n "$TARGET_BOOTLOADER_BOARD_NAME" ] ; then
+  echo "ro.product.board=$TARGET_BOOTLOADER_BOARD_NAME"
+fi
 
 # These values are deprecated, use "ro.product.cpu.abilist"
 # instead (see below).
