@@ -195,11 +195,8 @@ function setpaths()
                  ANDROID_KERNEL_TOOLCHAIN_PATH="$ARM_EABI_TOOLCHAIN":
             fi
             ;;
-        arm64)
-		# Default to 4.9 for arm64 kernel toolchain
-		toolchaindir=aarch64/aarch64-linux-android-4.9-kernel/bin
-		export ARM_EABI_TOOLCHAIN="$gccprebuiltdir/$toolchaindir"
-		ANDROID_KERNEL_TOOLCHAIN_PATH="$ARM_EABI_TOOLCHAIN"
+        *)
+            # No need to set ARM_EABI_TOOLCHAIN for other ARCHs
             ;;
     esac
 
