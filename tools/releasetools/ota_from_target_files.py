@@ -678,8 +678,28 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Unmount("/data")
     script.AppendExtra("endif;")
 
-  # Place a copy of file_contexts.bin into the OTA package which will be used
-  # by the recovery program.
+  script.Print(" ")
+  script.Print("              ___     ")
+  script.Print("             /  /\    ")
+  script.Print("            /  /::\   ")
+  script.Print("           /  /:/\:\  ")
+  script.Print("          /  /:/~/:/  ")
+  script.Print("         /__/:/ /:/___")
+  script.Print("         \  \:\/:::::/")
+  script.Print("          \  \::/~~~~ ")
+  script.Print("           \  \:\     ")
+  script.Print("            \  \:\    ")
+  script.Print("             \__\/    ")
+  script.Print(" (                 (        )")
+  script.Print(" )\ )      (       )\ )  ( /(")
+  script.Print("(()/( (    )\))(  (()/(  )\())")
+  script.Print(" /(_)))\  ((_)()\  /(_))((_)\ ")
+  script.Print("(_)) ((_) (_()((_)(_))  __((_)")
+  script.Print("| _ \| __||  \/  ||_ _| \ \/ /")
+  script.Print("|   /| _| | |\/| | | |   >  <")
+  script.Print("|_|_\|___||_|  |_||___| /_/\_\ ")
+  script.Print(" ")
+
   if "selinux_fc" in OPTIONS.info_dict:
     WritePolicyConfig(OPTIONS.info_dict["selinux_fc"], output_zip)
 
