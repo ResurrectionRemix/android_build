@@ -97,7 +97,7 @@ _vendor_module_owner_info_txt := $(call intermediates-dir-for,PACKAGING,vendor_o
 $(_vendor_module_owner_info_txt): PRIVATE_INFO := $(_vendor_module_owner_info)
 $(_vendor_module_owner_info_txt):
 	@echo "Write vendor module owner info $@"
-	$(hide) mkdir -p $(dir $@) && rm -f $@
+	@mkdir -p $(dir $@) && rm -f $@
 ifdef _vendor_module_owner_info
 	@for w in $(PRIVATE_INFO); \
 	  do \
