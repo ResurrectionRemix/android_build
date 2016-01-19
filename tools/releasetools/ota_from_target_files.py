@@ -645,6 +645,26 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Unmount("/data")
   script.AppendExtra("endif;")
 
+  script.Print(" ")
+  script.Print(" ")
+  script.Print(" ")
+  script.Print("          ___          ___     ")
+  script.Print("         /  /\        /  /\    ")
+  script.Print("        /  /::\      /  /::\   ")
+  script.Print("       /  /:/\:\    /  /:/\:\  ")
+  script.Print("      /  /:/~/:/   /  /:/~/:/  ")
+  script.Print("     /__/:/ /:/___/__/:/ /:/___")
+  script.Print("     \  \:\/:::::/\  \:\/:::::/")
+  script.Print("      \  \::/~~~~  \  \::/~~~~ ")
+  script.Print("       \  \:\       \  \:\     ")
+  script.Print("        \  \:\       \  \:\    ")
+  script.Print("         \__\/        \__\/    ")
+  script.Print("                               ")
+  script.Print("       RESURRECTION REMIX OS   ")
+  script.Print("                               ")
+  script.Print("       M A R S H M A L L O W   ")
+  script.Print("                               ")
+
   if "selinux_fc" in OPTIONS.info_dict:
     WritePolicyConfig(OPTIONS.info_dict["selinux_fc"], output_zip)
 
@@ -718,6 +738,15 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.RunBackup("restore")
     if block_based:
       script.Unmount("/system")
+
+  if block_based:
+    script.Print("Flashing SuperSU...")
+    common.ZipWriteStr(output_zip, "supersu/supersu.zip",
+                   ""+input_zip.read("SYSTEM/addon.d/UPDATE-SuperSU.zip"))
+    script.Mount("/system")
+    script.FlashSuperSU()
+  if block_based:
+    script.Unmount("/system")
 
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")
