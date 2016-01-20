@@ -645,6 +645,26 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Unmount("/data")
   script.AppendExtra("endif;")
 
+  script.Print(" ")
+  script.Print(" ")
+  script.Print(" ")
+  script.Print("          ___          ___     ")
+  script.Print("         /  /\        /  /\    ")
+  script.Print("        /  /::\      /  /::\   ")
+  script.Print("       /  /:/\:\    /  /:/\:\  ")
+  script.Print("      /  /:/~/:/   /  /:/~/:/  ")
+  script.Print("     /__/:/ /:/___/__/:/ /:/___")
+  script.Print("     \  \:\/:::::/\  \:\/:::::/")
+  script.Print("      \  \::/~~~~  \  \::/~~~~ ")
+  script.Print("       \  \:\       \  \:\     ")
+  script.Print("        \  \:\       \  \:\    ")
+  script.Print("         \__\/        \__\/    ")
+  script.Print("                               ")
+  script.Print("       RESURRECTION REMIX OS   ")
+  script.Print("                               ")
+  script.Print("       M A R S H M A L L O W   ")
+  script.Print("                               ")
+
   if "selinux_fc" in OPTIONS.info_dict:
     WritePolicyConfig(OPTIONS.info_dict["selinux_fc"], output_zip)
 
