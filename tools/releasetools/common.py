@@ -268,9 +268,10 @@ def LoadRecoveryFSTab(read_helper, fstab_version, type):
           else:
             print("%s: unknown option \"%s\"" % (mount_point, i))
 
-      d[mount_point] = Partition(mount_point=mount_point, fs_type=pieces[1],
-                                 device=pieces[2], length=length,
-                                 device2=device2)
+      if not d.get(mount_point):
+          d[mount_point] = Partition(mount_point=mount_point, fs_type=pieces[1],
+                                     device=pieces[2], length=length,
+                                     device2=device2)
 
   elif fstab_version == 2:
     d = {}
@@ -306,9 +307,10 @@ def LoadRecoveryFSTab(read_helper, fstab_version, type):
           context = i
 
       mount_point = pieces[1]
-      d[mount_point] = Partition(mount_point=mount_point, fs_type=pieces[2],
-                                 device=pieces[0], length=length,
-                                 device2=None, context=context)
+      if not d.get(mount_point):
+          d[mount_point] = Partition(mount_point=mount_point, fs_type=pieces[2],
+                                     device=pieces[0], length=length,
+                                     device2=None, context=context)
 
   else:
     raise ValueError("Unknown fstab_version: \"%d\"" % (fstab_version,))
@@ -395,10 +397,10 @@ def BuildBootableImage(sourcedir, fs_config_file, info_dict=None):
       cmd.append("--ramdisk_offset")
       cmd.append(open(fn).read().rstrip("\n"))
 
-    fn = os.path.join(sourcedir, "dt_args")
+    fn = os.path.join(sourcedir, "dt")
     if os.access(fn, os.F_OK):
       cmd.append("--dt")
-      cmd.append(open(fn).read().rstrip("\n"))
+      cmd.append(fn)
 
     fn = os.path.join(sourcedir, "pagesize")
     if os.access(fn, os.F_OK):
