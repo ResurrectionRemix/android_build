@@ -1105,7 +1105,8 @@ dirty:
 	@rm -rf $(OUT_DIR)/target/product/*/*.zip
 	@rm -rf $(OUT_DIR)/target/product/*/*.md5sum
 	@rm -rf $(OUT_DIR)/target/product/*/*.txt
-	@echo -e ${CL_GRN}"build.prop, changelog and zip files erased"${CL_RST}	
+	@rm -rf $(OUT_DIR)/target/product/*/obj/KERNEL_OBJ/.version
+	@echo -e ${CL_GRN}"build.prop, changelog, zip files and kernel version files erased"${CL_RST}	
 
 # Clears out all apks
 .PHONY: appclean
