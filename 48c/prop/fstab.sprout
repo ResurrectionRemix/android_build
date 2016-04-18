@@ -1,0 +1,15 @@
+# Android fstab file.
+#<src>           <mnt_point>         <type>    <mnt_flags and options>                 <fs_mgr_flags>
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+/dev/block/platform/mtk-msdc.0/by-name/boot      /boot       emmc  defaults                                                    defaults
+/dev/block/platform/mtk-msdc.0/by-name/recovery  /recovery   emmc  defaults                                                    defaults
+/dev/block/platform/mtk-msdc.0/by-name/system    /system     ext4  ro                                                          wait
+/dev/block/platform/mtk-msdc.0/by-name/userdata  /data       ext4  noatime,nosuid,nodev,noauto_da_alloc,discard                wait,check,encryptable=/dev/block/platform/mtk-msdc.0/by-name/metadata
+/dev/block/platform/mtk-msdc.0/by-name/cache     /cache      ext4  noatime,nosuid,nodev,noauto_da_alloc,discard                wait,check
+/dev/block/platform/mtk-msdc.0/by-name/protect1  /protect_f  ext4  noatime,nosuid,nodev,noauto_da_alloc,commit=1,nodelalloc    wait,check
+/dev/block/platform/mtk-msdc.0/by-name/protect2  /protect_s  ext4  noatime,nosuid,nodev,noauto_da_alloc,commit=1,nodelalloc    wait,check
+/dev/block/platform/mtk-msdc.0/by-name/oem       /oem        ext4  ro,context=u:object_r:oemfs:s0,nosuid,nodev                                             wait
+/devices/platform/mtk-msdc.1/mmc_host*           auto        vfat  defaults                                                    voldmanaged=sdcard1:auto,noemulatedsd
+
