@@ -685,10 +685,29 @@ complete -F _lunch lunch 2>/dev/null
 # Times greatly (We dont need to Build for the Sprout4 again
 function spcon()
 {
-    chmod a+x external/Sprout/48c/make.sh
-    ./make.sh
+    cur_dir=`pwd`
+    chmod a+x build/48c/make.sh
+    ./build/48c/make.sh
 }
 
+# Cleans the mess created by spcon() funct
+function cleansp()
+{
+    cur_dir=`pwd`
+    cd build/48c/
+    rm -rf boot.img-ramdisk
+    rm -rf mkbootfs
+    rm -rf mkbootimg
+    rm -rf ramdisk.gz
+    rm -rf zImage
+    rm -rf boot.img
+    cd mkboot
+    rm rsa.o
+    rm sha.o
+    rm mkbootfs
+    rm mkbootimg
+    cd ../../..
+}
 # Configures the build to build unbundled apps.
 # Run tapas with one or more app names (from LOCAL_PACKAGE_NAME)
 function tapas()
