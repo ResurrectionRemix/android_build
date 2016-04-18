@@ -690,7 +690,7 @@ function spcon()
     ./build/48c/make.sh
 }
 
-# Cleans the mess created by spcon() funct
+# Cleans the mess created by spcon() funct itself
 function cleansp()
 {
     cur_dir=`pwd`
