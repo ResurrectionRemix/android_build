@@ -3,6 +3,7 @@
 # Copyright (C) 2008 The Android Open Source Project
 # Copyright (C) 2013 SlimRoms
 # Copyright (C) 2014 AICP
+# Copyright (C) 2016 Resurrection Remix
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,11 +49,11 @@ if path.exists(defconfig):
     prekernel_version = search('CONFIG_LOCALVERSION=.*\n', open(defconfig, 'r').read())
     if prekernel_version:
         kernel_version = sub(r'(CONFIG_LOCALVERSION=)|\"|\n|-', "", prekernel_version.group(0))
-        kernel_version = "%s-%s-kernel" % (kernel_version or "AICP", device)
+        kernel_version = "%s-%s-kernel" % (kernel_version or "RR", device)
     else:
-        kernel_version = "AICP-%s-kernel" % device
+        kernel_version = "RR-%s-kernel" % device
 else:
-    kernel_version = "AICP-%s-kernel" % device
+    kernel_version = "RR-%s-kernel" % device
 
 updater = "%s/obj/EXECUTABLES/updater_intermediates/updater" % out
 signer = "%s/framework/signapk.jar" % environ['ANDROID_HOST_OUT']
@@ -89,7 +90,7 @@ copy2(updater, "%s/update-binary" % updater_dir)
 updater_script = "%s/updater-script" % updater_dir
 
 # create the contents
-contents = "ui_print(\"installing Aicp Kernel...\");\n"
+contents = "ui_print(\"installing RR Kernel...\");\n"
 if boot_partition_type == "mtd":
     contents += "package_extract_file(\"boot.img\", \"/tmp/boot.img\");\n"
     contents += "write_raw_image(\"/tmp/boot.img\", \"%s\");\n" % boot_partition
