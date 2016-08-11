@@ -40,6 +40,9 @@ if [ -e "$1" ];then
     elif [ "$NAME" = "webview.apk" ];then
         echo -e $CL_YLW"$NAME is special, skipping"$CL_RST
         exit 1
+    elif [ "$NAME" = "Gello.apk" ];then
+        echo -e $CL_YLW"$NAME is special, skipping"$CL_RST
+        exit 1
     fi
 
     [ $QUIET ] || echo -e $CL_YLW"Certificate:"$CL_RST" $CERT"
