@@ -319,12 +319,22 @@ if __name__ == '__main__':
         if args.start_branch:
             subprocess.check_output(['repo', 'start', args.start_branch[0], project_path])
 
-        # Check if change is already picked to HEAD...HEAD~10
+        # Determine the maximum commits to check already picked changes
+        check_picked_count = 10
+        branch_commits_count = int(subprocess.check_output(['git', 'rev-list', '--count', 'HEAD'], cwd=project_path))
+        if branch_commits_count <= check_picked_count:
+            check_picked_count = branch_commits_count - 1
+
+        # Check if change is already picked to HEAD...HEAD~check_picked_count
         found_change = False
-        for i in range(0, 10):
+        for i in range(0, check_picked_count):
             output = subprocess.check_output(['git', 'show', '-q', 'HEAD~{0}'.format(i)], cwd=project_path).split()
             if 'Change-Id:' in output:
-                head_change_id = output[output.index('Change-Id:')+1]
+                head_change_id = ''
+                for j,t in enumerate(reversed(output)):
+                    if t == 'Change-Id:':
+                        head_change_id = output[len(output) - j]
+                        break
                 if head_change_id.strip() == item['change_id']:
                     print('Skipping {0} - already picked in {1} as HEAD~{2}'.format(item['id'], project_path, i))
                     found_change = True
