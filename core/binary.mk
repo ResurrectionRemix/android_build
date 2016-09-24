@@ -432,6 +432,18 @@ ifeq ($(SDCLANG),true)
     endif
 endif
 
+ifeq ($(my_sdclang),true)
+ifneq ($(HOST_OS),linux)
+$(warning ****************************************************************)
+$(warning * SDCLANG is not supported on non-linux hosts. Disabling...)
+$(warning ****************************************************************)
+my_sdclang := false
+ifeq ($(SDCLANG_FORCED),true)
+$(error $(LOCAL_PATH): SDCLANG_FORCED was triggered! You are not allowed to build without SDCLANG while it is enabled... Dying...)
+endif
+endif
+endif
+
 # arch-specific static libraries go first so that generic ones can depend on them
 my_static_libraries := $(LOCAL_STATIC_LIBRARIES_$($(my_prefix)$(LOCAL_2ND_ARCH_VAR_PREFIX)ARCH)) $(LOCAL_STATIC_LIBRARIES_$(my_32_64_bit_suffix)) $(my_static_libraries)
 my_whole_static_libraries := $(LOCAL_WHOLE_STATIC_LIBRARIES_$($(my_prefix)$(LOCAL_2ND_ARCH_VAR_PREFIX)ARCH)) $(LOCAL_WHOLE_STATIC_LIBRARIES_$(my_32_64_bit_suffix)) $(my_whole_static_libraries)
@@ -487,11 +499,17 @@ my_target_global_conlyflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL
 my_target_global_cppflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_CPPFLAGS)
 my_target_global_ldflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_LDFLAGS)
     ifeq ($(my_sdclang),true)
+        SDCLANG_PRECONFIGURED_FLAGS := -Wno-vectorizer-no-neon
+
+        my_target_global_cflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
+        my_target_global_conlyflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
+        my_target_global_cppflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
+
         ifeq ($(strip $(my_cc)),)
-            my_cc := $(my_cc_wrapper) $(SDCLANG_PATH)/clang $(SDLLVM_AE_FLAG) -Wno-vectorizer-no-neon
+            my_cc := $(SDCLANG_PATH)/clang
         endif
         ifeq ($(strip $(my_cxx)),)
-            my_cxx := $(my_cxx_wrapper) $(SDCLANG_PATH)/clang++ $(SDLLVM_AE_FLAG) -Wno-vectorizer-no-neon
+            my_cxx := $(SDCLANG_PATH)/clang++
         endif
     endif
 else

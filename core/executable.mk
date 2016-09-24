@@ -42,10 +42,6 @@ endif
 
 my_skip_non_preferred_arch :=
 
-ifeq ($(LOCAL_SDCLANG), true)
-include $(SDCLANG_FLAG_DEFS)
-endif
-
 # check if preferred arch is supported
 include $(BUILD_SYSTEM)/module_arch_supported.mk
 ifeq ($(my_module_arch_supported),true)
