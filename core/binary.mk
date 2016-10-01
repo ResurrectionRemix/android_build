@@ -501,6 +501,12 @@ my_target_global_ldflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_LD
     ifeq ($(my_sdclang),true)
         SDCLANG_PRECONFIGURED_FLAGS := -Wno-vectorizer-no-neon
 
+        ifeq ($(LOCAL_SDCLANG_LTO), true)
+        ifneq ($(LOCAL_MODULE_CLASS), STATIC_LIBRARIES)
+            SDCLANG_PRECONFIGURED_FLAGS += -flto
+            my_target_global_ldflags += -fuse-ld=qcld -flto
+        endif
+        endif
         my_target_global_cflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
         my_target_global_conlyflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
         my_target_global_cppflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
