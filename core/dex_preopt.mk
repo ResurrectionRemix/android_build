@@ -3,6 +3,22 @@
 #
 ####################################
 
+# Filter out duplicates
+define uniq__dx
+  $(eval seen :=)
+  $(foreach _,$1,$(if $(filter $_,${seen}),,$(eval seen += $_)))
+  ${seen}
+endef
+
+PRODUCT_BOOT_JARS := $(call uniq__dx,$(subst $(space), ,$(strip $(PRODUCT_BOOT_JARS))))
+PRODUCT_BOOT_JARS_NOPREOPT := $(call uniq__dx,$(subst $(space), ,$(strip $(PRODUCT_BOOT_JARS_NOPREOPT))))
+
+# Filter out non-preopt boot jars out of preoptable boot jars
+# this is to prevent further duplicates, as well, as strictly
+# enforcing the non-preopt rule here: non-preop boot jars are
+# not allowed to stay in normal boot jars so remove them here
+PRODUCT_BOOT_JARS := $(filter-out $(PRODUCT_BOOT_JARS_NOPREOPT),$(PRODUCT_BOOT_JARS))
+
 # list of boot classpath jars for dexpreopt
 DEXPREOPT_BOOT_JARS := $(subst $(space),:,$(PRODUCT_BOOT_JARS))
 DEXPREOPT_BOOT_JARS_MODULES := $(PRODUCT_BOOT_JARS)
