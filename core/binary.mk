@@ -503,8 +503,13 @@ my_target_global_ldflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_LD
 
         ifeq ($(LOCAL_SDCLANG_LTO), true)
         ifneq ($(LOCAL_MODULE_CLASS), STATIC_LIBRARIES)
+
+            ifeq ($(strip $(LOCAL_SDCLANG_LTO_LDFLAGS)),)
+                LOCAL_SDCLANG_LTO_LDFLAGS := $(SDCLANG_COMMON_FLAGS)
+            endif
+
             SDCLANG_PRECONFIGURED_FLAGS += -fuse-ld=qcld -flto
-            my_target_global_ldflags += -fuse-ld=qcld -flto
+            my_target_global_ldflags += -fuse-ld=qcld -flto $(LOCAL_SDCLANG_LTO_LDFLAGS)
         endif
         endif
         my_target_global_cflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
