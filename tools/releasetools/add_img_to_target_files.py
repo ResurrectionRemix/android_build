@@ -101,7 +101,7 @@ def AddSystemOther(output_zip, prefix="IMAGES/"):
 
   prebuilt_path = os.path.join(OPTIONS.input_tmp, prefix, "system_other.img")
   if os.path.exists(prebuilt_path):
-    print "system_other.img already exists in %s, no need to rebuild..." % (prefix,)
+    print("system_other.img already exists in %s, no need to rebuild..." % prefix)
     return
 
   imgname = BuildSystemOther(OPTIONS.input_tmp, OPTIONS.info_dict)

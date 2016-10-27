@@ -1420,7 +1420,7 @@ def WriteABOTAPackageWithBrilloScript(target_file, output_file,
       care_map_data = target_zip.read(care_map_path)
       common.ZipWriteStr(output_zip, "care_map.txt", care_map_data)
     else:
-      print "Warning: cannot find care map file in target_file package"
+      print("Warning: cannot find care map file in target_file package")
     common.ZipClose(target_zip)
 
   # Sign the whole package to comply with the Android OTA package format.
