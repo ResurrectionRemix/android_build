@@ -296,27 +296,6 @@ ifeq (,$(LOCAL_SDK_VERSION)$(WITHOUT_LIBCOMPILER_RT))
   my_static_libraries += $(COMPILER_RT_CONFIG_EXTRA_STATIC_LIBRARIES)
 endif
 
-####################################################
-## Add FDO flags if FDO is turned on and supported
-## Please note that we will do option filtering during FDO build.
-## i.e. Os->O2, remove -fno-early-inline and -finline-limit.
-##################################################################
-my_fdo_build :=
-ifneq ($(filter true always, $(LOCAL_FDO_SUPPORT)),)
-  ifeq ($(BUILD_FDO_INSTRUMENT),true)
-    my_cflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_FDO_INSTRUMENT_CFLAGS)
-    my_ldflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_FDO_INSTRUMENT_LDFLAGS)
-    my_fdo_build := true
-  else ifneq ($(filter true,$(BUILD_FDO_OPTIMIZE))$(filter always,$(LOCAL_FDO_SUPPORT)),)
-    my_cflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_FDO_OPTIMIZE_CFLAGS)
-    my_fdo_build := true
-  endif
-  # Disable ccache (or other compiler wrapper) except gomacc, which
-  # can handle -fprofile-use properly.
-  my_cc_wrapper := $(filter $(GOMA_CC),$(my_cc_wrapper))
-  my_cxx_wrapper := $(filter $(GOMA_CC),$(my_cxx_wrapper))
-endif
-
 ###########################################################
 ## Explicitly declare assembly-only __ASSEMBLY__ macro for
 ## assembly source
