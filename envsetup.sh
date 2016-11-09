@@ -1710,7 +1710,7 @@ function aospremote()
         return 1
     fi
     git remote rm aosp 2> /dev/null
-    PROJECT=$(pwd -P | sed "s#$ANDROID_BUILD_TOP\/##")
+    PROJECT=$(pwd -P | sed -e "s#$ANDROID_BUILD_TOP\/##; s#-caf.*##; s#\/default##")
     if (echo $PROJECT | grep -qv "^device")
     then
         PFX="platform/"
@@ -1727,7 +1727,7 @@ function cafremote()
         return 1
     fi
     git remote rm caf 2> /dev/null
-    PROJECT=$(pwd -P | sed "s#$ANDROID_BUILD_TOP\/##")
+    PROJECT=$(pwd -P | sed -e "s#$ANDROID_BUILD_TOP\/##; s#-caf.*##; s#\/default##")
     if (echo $PROJECT | grep -qv "^device")
     then
         PFX="platform/"
@@ -2406,7 +2406,8 @@ function set_java_home() {
                 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
                 ;;
         esac
-      else
+      fi
+      if [ ! "$JAVA_HOME" ] || [ ! -d "$JAVA_HOME" ]; then
         case `uname -s` in
             Darwin)
                 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
