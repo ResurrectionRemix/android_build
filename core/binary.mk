@@ -298,6 +298,49 @@ ifeq (,$(LOCAL_SDK_VERSION)$(WITHOUT_LIBCOMPILER_RT))
   my_static_libraries += $(COMPILER_RT_CONFIG_EXTRA_STATIC_LIBRARIES)
 endif
 
+####################################################
+## Add FDO flags if FDO is turned on and supported
+## Please note that we will do option filtering during FDO build.
+## i.e. Os->O2, remove -fno-early-inline and -finline-limit.
+##################################################################
+my_fdo_build :=
+ifneq ($(filter true always, $(LOCAL_FDO_SUPPORT)),)
+  ifeq ($(BUILD_FDO_INSTRUMENT),true)
+    my_cflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_FDO_INSTRUMENT_CFLAGS)
+    my_ldflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_FDO_INSTRUMENT_LDFLAGS)
+    my_fdo_build := true
+  else ifneq ($(filter true,$(BUILD_FDO_OPTIMIZE))$(filter always,$(LOCAL_FDO_SUPPORT)),)
+    my_cflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_FDO_OPTIMIZE_CFLAGS)
+    my_fdo_build := true
+  endif
+  # Disable ccache (or other compiler wrapper) except gomacc, unless
+  # it can handle -fprofile-use properly.
+
+  # ccache supports -fprofile-use as of version 3.2. Parse the version output
+  # of each wrapper to determine if it's ccache 3.2 or newer.
+  is_cc_ccache := $(shell if [ "`$(my_cc_wrapper) -V 2>/dev/null | head -1 | cut -d' ' -f1`" = ccache ]; then echo true; fi)
+  ifeq ($(is_cc_ccache),true)
+    cc_ccache_version := $(shell $(my_cc_wrapper) -V | head -1 | grep -o '[[:digit:]]\+\.[[:digit:]]\+')
+    vmajor := $(shell echo $(cc_ccache_version) | cut -d'.' -f1)
+    vminor := $(shell echo $(cc_ccache_version) | cut -d'.' -f2)
+    cc_ccache_ge_3_2 = $(shell if [ $(vmajor) -gt 3 -o $(vmajor) -eq 3 -a $(vminor) -ge 2 ]; then echo true; fi)
+  endif
+  is_cxx_ccache := $(shell if [ "`$(my_cxx_wrapper) -V 2>/dev/null | head -1 | cut -d' ' -f1`" = ccache ]; then echo true; fi)
+  ifeq ($(is_cxx_ccache),true)
+    cxx_ccache_version := $(shell $(my_cxx_wrapper) -V | head -1 | grep -o '[[:digit:]]\+\.[[:digit:]]\+')
+    vmajor := $(shell echo $(cxx_ccache_version) | cut -d'.' -f1)
+    vminor := $(shell echo $(cxx_ccache_version) | cut -d'.' -f2)
+    cxx_ccache_ge_3_2 = $(shell if [ $(vmajor) -gt 3 -o $(vmajor) -eq 3 -a $(vminor) -ge 2 ]; then echo true; fi)
+  endif
+
+  ifneq ($(cc_ccache_ge_3_2),true)
+    my_cc_wrapper := $(filter $(GOMA_CC),$(my_cc_wrapper))
+  endif
+  ifneq ($(cxx_ccache_ge_3_2),true)
+    my_cxx_wrapper := $(filter $(GOMA_CC),$(my_cxx_wrapper))
+  endif
+endif
+
 ###########################################################
 ## Explicitly declare assembly-only __ASSEMBLY__ macro for
 ## assembly source
