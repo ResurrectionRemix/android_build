@@ -1,3 +1,4 @@
+. vendor/cm/tools/rr_variant.sh && ./vendor/cm/tools/changelog.sh &&
 function hmm() {
 cat <<EOF
 Invoke ". build/envsetup.sh" from your shell to add the following functions to your environment:
@@ -1717,5 +1718,5 @@ check_bash_version && {
 
 export ANDROID_BUILD_TOP=$(gettop)
 
-. vendor/cm/build/envsetup.sh && ./vendor/cm/tools/changelog.sh
+. vendor/cm/build/envsetup.sh
 
