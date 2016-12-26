@@ -701,6 +701,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   
   if GetBuildProp("ro.rr.version", OPTIONS.info_dict) is not None:
     buildid = GetBuildProp("ro.rr.version", OPTIONS.info_dict)
+    buildtype = GetBuildProp("rr.build.type", OPTIONS.info_dict)
     buildidn = GetBuildProp("ro.build.id", OPTIONS.info_dict)
     buildday = GetBuildProp("ro.build.date", OPTIONS.info_dict)
     securep = GetBuildProp("ro.build.version.security_patch", OPTIONS.info_dict)
@@ -725,6 +726,8 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print(" Build ID: %s"%(buildidn));
     script.Print("");
     script.Print(" Build date: %s"%(buildday));
+    script.Print("");
+    script.Print(" Build type: %s"%(buildtype));
     script.Print("");
     script.Print(" Build host: %s"%(buildhst));
     script.Print("");
