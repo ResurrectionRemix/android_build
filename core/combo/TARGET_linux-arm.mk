@@ -71,17 +71,16 @@ endef
 
 $(combo_2nd_arch_prefix)TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O2 \
+$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O3 \
                         -fomit-frame-pointer \
                         -fstrict-aliasing    \
                         -funswitch-loops
 
 # Modules can choose to compile some source as thumb.
-ifeq ($(STRICT_ALIASING),true)
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := -mthumb -Os -fomit-frame-pointer
-else
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing
-endif
+$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -mthumb \
+                        -O3 \
+                        -fomit-frame-pointer \
+                        -fno-strict-aliasing
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
 # or in your environment to force a full arm build, even for
@@ -149,7 +148,6 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
 # More flags/options can be added here
 $(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS := \
 			-DNDEBUG \
-			-g \
 			-Wstrict-aliasing=2 \
 			-fgcse-after-reload \
 			-frerun-cse-after-loop \
