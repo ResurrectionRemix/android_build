@@ -2235,7 +2235,7 @@ CM_TARGET_PACKAGE := $(PRODUCT_OUT)/$(RR_VERSION).zip
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(CM_TARGET_PACKAGE)
-	$(hide) $(MD5SUM) $(CM_TARGET_PACKAGE) > $(CM_TARGET_PACKAGE).md5sum
+	$(hide) $(MD5SUM) $(CM_TARGET_PACKAGE) | sed "s|$(PRODUCT_OUT)/||" > $(CM_TARGET_PACKAGE).md5sum
 	@echo "Package Complete: $(CM_TARGET_PACKAGE)"
 	$(hide) ./vendor/cm/tools/rr.sh
 	@echo -e ${CL_CYN}"RR.zip file size MD5 :"${CL_MAG}" `cat $(CM_TARGET_PACKAGE).md5sum | cut -d ' ' -f 1`"${CL_RST}
