@@ -16,8 +16,18 @@ echo "ro.build.version.base_os=$PLATFORM_BASE_OS"
 echo "ro.build.date=`$DATE`"
 echo "ro.build.date.utc=`$DATE +%s`"
 echo "ro.build.type=$TARGET_BUILD_TYPE"
+if [ -z $KBUILD_BUILD_USER ];
+then
 echo "ro.build.user=$USER"
+else
+echo "ro.build.user=$KBUILD_BUILD_USER"
+fi
+if [ -z $KBUILD_BUILD_HOST ];
+then
 echo "ro.build.host=`hostname`"
+else
+echo "ro.build.host=$KBUILD_BUILD_HOST"
+fi
 echo "ro.build.tags=$BUILD_VERSION_TAGS"
 echo "ro.build.flavor=$TARGET_BUILD_FLAVOR"
 if [ -n "$BOARD_BUILD_SYSTEM_ROOT_IMAGE" ] ; then
