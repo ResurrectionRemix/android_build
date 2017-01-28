@@ -699,7 +699,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     buildday = GetBuildProp("ro.build.date", OPTIONS.info_dict)
     securep = GetBuildProp("ro.build.version.security_patch", OPTIONS.info_dict)
     buildhst = GetBuildProp("ro.build.host", OPTIONS.info_dict)
-    if GetBuildProp("ro.sf.lcd_density", OPTIONS.info_dict) is not None: density = GetBuildProp("ro.sf.lcd_density", OPTIONS.info_dict)
+    density = GetBuildProp("ro.sf.lcd_density", OPTIONS.info_dict)
     device = GetBuildProp("ro.rr.device", OPTIONS.info_dict)
     androidver = GetBuildProp("ro.build.version.release", OPTIONS.info_dict)
     manufacturer = GetBuildProp("ro.product.manufacturer", OPTIONS.info_dict)
@@ -729,8 +729,8 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print(" Device codename: %s"%(device));
     script.Print("");
     script.Print(" Manufacturer: %s"%(manufacturer));
-    if GetBuildProp("ro.sf.lcd_density", OPTIONS.info_dict) is not None: script.Print("");
-    if GetBuildProp("ro.sf.lcd_density", OPTIONS.info_dict) is not None: script.Print(" LCD density: %s"%(density));
+    script.Print("");
+    script.Print(" LCD density: %s"%(density));
     script.Print("");
     script.Print(" *******************************************");
   
@@ -890,8 +890,8 @@ def GetBuildProp(prop, info_dict):
   try:
     return info_dict.get("build.prop", {})[prop]
   except KeyError:
-    print ("WARNING: couldn't find %s in build.prop" % (prop,))
-    return None
+    raise common.ExternalError("couldn't find %s in build.prop" % (prop,))
+
 
 def AddToKnownPaths(filename, known_paths):
   if filename[-1] == "/":
