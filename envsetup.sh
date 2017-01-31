@@ -1,3 +1,9 @@
+## For Jack Memory issue.
+
+export JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4g"
+./prebuilts/sdk/tools/jack-admin kill-server
+./prebuilts/sdk/tools/jack-admin start-server
+
 function hmm() {
 cat <<EOF
 Invoke ". build/envsetup.sh" from your shell to add the following functions to your environment:
