@@ -21,7 +21,7 @@ ifneq ($(addon_name),)
 addon_dir_leaf  := $(addon_name)-$(FILE_NAME_TAG)-$(INTERNAL_SDK_HOST_OS_NAME)
 addon_dir_img   := $(addon_dir_leaf)-img
 intermediates   := $(HOST_OUT_INTERMEDIATES)/SDK_ADDON/$(addon_name)_intermediates
-full_target     := $(HOST_OUT_SDK_ADDON)/$(addon_dir_leaf).zip
+sdk_addon_target := $(HOST_OUT_SDK_ADDON)/$(addon_dir_leaf).zip
 full_target_img := $(HOST_OUT_SDK_ADDON)/$(addon_dir_img).zip
 staging         := $(intermediates)
 
