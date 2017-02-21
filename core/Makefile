@@ -1,4 +1,3 @@
-# Put some miscellaneous rules here
 
 # HACK: clear LOCAL_PATH from including last build target before calling
 # intermedites-dir-for
