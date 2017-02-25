@@ -181,7 +181,11 @@ include $(BUILD_SYSTEM)/device.mk
 
 # A CM build needs only the CM product makefiles.
 ifneq ($(CM_BUILD),)
-  all_product_configs := $(shell find device -path "*/$(CM_BUILD)/cm.mk")
+  all_product_configs := $(shell find device -path "*/$(CM_BUILD)/lineage.mk")
+  ifeq ($(all_product_configs),)
+    # Fall back to cm.mk
+    all_product_configs := $(shell find device -path "*/$(CM_BUILD)/cm.mk")
+  endif
 else
   ifneq ($(strip $(TARGET_BUILD_APPS)),)
   # An unbundled app build needs only the core product makefiles.
@@ -343,12 +347,6 @@ endif
 # The optional :<owner> is used to indicate the owner of a vendor file.
 PRODUCT_COPY_FILES := \
     $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_COPY_FILES))
-_boot_animation := $(strip $(lastword $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_BOOTANIMATION)))
-ifneq ($(_boot_animation),)
-PRODUCT_COPY_FILES += \
-    $(_boot_animation):system/media/bootanimation.zip
-endif
-_boot_animation :=
 
 # We might want to skip items listed in PRODUCT_COPY_FILES for
 # various reasons. This is useful for replacing a binary module with one

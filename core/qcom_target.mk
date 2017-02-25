@@ -1,5 +1,8 @@
 # Target-specific configuration
 
+# Bring in Qualcomm helper macros
+include $(BUILD_SYSTEM)/qcom_utils.mk
+
 # Populate the qcom hardware variants in the project pathmap.
 define ril-set-path-variant
 $(call project-set-path-variant,ril,TARGET_RIL_VARIANT,hardware/$(1))
@@ -22,6 +25,10 @@ $(call project-set-path,qcom-$(2),$(strip $(path)))
 endef
 
 ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
+    B_FAMILY := msm8226 msm8610 msm8974
+    B64_FAMILY := msm8992 msm8994
+    BR_FAMILY := msm8909 msm8916
+    UM_FAMILY := msm8937 msm8953
 
     qcom_flags := -DQCOM_HARDWARE
     qcom_flags += -DQCOM_BSP
@@ -55,50 +62,32 @@ ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
     2ND_CLANG_TARGET_GLOBAL_CFLAGS += $(qcom_flags)
     2ND_CLANG_TARGET_GLOBAL_CPPFLAGS += $(qcom_flags)
 
-    ifeq ($(QCOM_HARDWARE_VARIANT),)
-        ifneq ($(filter msm8610 msm8226 msm8974,$(TARGET_BOARD_PLATFORM)),)
-            QCOM_HARDWARE_VARIANT := msm8974
-        else
-        ifneq ($(filter msm8909 msm8916,$(TARGET_BOARD_PLATFORM)),)
-            QCOM_HARDWARE_VARIANT := msm8916
-        else
-        ifneq ($(filter msm8953 msm8937,$(TARGET_BOARD_PLATFORM)),)
-            QCOM_HARDWARE_VARIANT := msm8937
-        else
-        ifneq ($(filter msm8992 msm8994,$(TARGET_BOARD_PLATFORM)),)
-            QCOM_HARDWARE_VARIANT := msm8994
-        else
-            QCOM_HARDWARE_VARIANT := $(TARGET_BOARD_PLATFORM)
-        endif
-        endif
-        endif
-        endif
+    ifeq ($(call is-board-platform-in-list, $(B_FAMILY)),true)
+        MSM_VIDC_TARGET_LIST := $(B_FAMILY)
+        QCOM_HARDWARE_VARIANT := msm8974
+    else
+    ifeq ($(call is-board-platform-in-list, $(B64_FAMILY)),true)
+        MSM_VIDC_TARGET_LIST := $(B64_FAMILY)
+        QCOM_HARDWARE_VARIANT := msm8994
+    else
+    ifeq ($(call is-board-platform-in-list, $(BR_FAMILY)),true)
+        MSM_VIDC_TARGET_LIST := $(BR_FAMILY)
+        QCOM_HARDWARE_VARIANT := msm8916
+    else
+    ifeq ($(call is-board-platform-in-list, $(UM_FAMILY)),true)
+        MSM_VIDC_TARGET_LIST := $(UM_FAMILY)
+        QCOM_HARDWARE_VARIANT := msm8937
+    else
+        MSM_VIDC_TARGET_LIST := $(TARGET_BOARD_PLATFORM)
+        QCOM_HARDWARE_VARIANT := $(TARGET_BOARD_PLATFORM)
+    endif
+    endif
+    endif
     endif
 
-# HACK: check to see if build uses standard QC HAL paths by checking for CM path structure
-AOSP_VARIANT_MAKEFILE := $(wildcard hardware/qcom/audio/default/Android.mk)
-ifeq ("$(AOSP_VARIANT_MAKEFILE)","")
-$(call project-set-path,qcom-audio,hardware/qcom/audio)
-$(call project-set-path,qcom-display,hardware/qcom/display)
-$(call project-set-path,qcom-media,hardware/qcom/media)
-$(call set-device-specific-path,CAMERA,camera,hardware/qcom/camera)
-$(call set-device-specific-path,GPS,gps,hardware/qcom/gps)
-$(call set-device-specific-path,SENSORS,sensors,hardware/qcom/sensors)
-$(call set-device-specific-path,LOC_API,loc-api,vendor/qcom/opensource/location)
-$(call set-device-specific-path,DATASERVICES,dataservices,vendor/qcom/opensource/dataservices)
-$(call project-set-path,ril,hardware/ril)
-$(call project-set-path,wlan,hardware/qcom/wlan)
-$(call project-set-path,bt-vendor,hardware/qcom/bt)
-else
 $(call project-set-path,qcom-audio,hardware/qcom/audio-caf/$(QCOM_HARDWARE_VARIANT))
-
-ifeq ($(SONY_BF64_KERNEL_VARIANT),true)
-$(call project-set-path,qcom-display,hardware/qcom/display-caf/sony)
-$(call project-set-path,qcom-media,hardware/qcom/media-caf/sony)
-else
 $(call project-set-path,qcom-display,hardware/qcom/display-caf/$(QCOM_HARDWARE_VARIANT))
 $(call project-set-path,qcom-media,hardware/qcom/media-caf/$(QCOM_HARDWARE_VARIANT))
-endif
 
 $(call set-device-specific-path,CAMERA,camera,hardware/qcom/camera)
 $(call set-device-specific-path,GPS,gps,hardware/qcom/gps)
@@ -109,7 +98,6 @@ $(call set-device-specific-path,DATASERVICES,dataservices,vendor/qcom/opensource
 $(call ril-set-path-variant,ril)
 $(call wlan-set-path-variant,wlan-caf)
 $(call bt-vendor-set-path-variant,bt-caf)
-endif # AOSP_VARIANT_MAKEFILE
 
 else
 
