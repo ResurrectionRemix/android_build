@@ -1,4 +1,5 @@
 # Copyright (C) 2012 The CyanogenMod Project
+#           (C) 2017 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +33,9 @@
 #   TARGET_USES_UNCOMPRESSED_KERNEL    = 'true' if Kernel is uncompressed,
 #                                          optional, defaults to false
 #   TARGET_KERNEL_CROSS_COMPILE_PREFIX = Compiler prefix (e.g. aarch64-linux-android-)
-#                                          defaults to arm-eabi-
+#                                          defaults to arm-eabi- for arm
+#                                                      aarch64-linux-android- for arm64
+#                                                      x86_64-linux-android- for x86
 #
 #   BOARD_KERNEL_IMAGE_NAME            = Built image name, optional,
 #                                          defaults to Image.gz on arm64
@@ -132,16 +135,6 @@ else
     KERNEL_ADDITIONAL_CONFIG_SRC := /dev/null
 endif
 
-## Do be discontinued in a future version. Notify builder about target
-## kernel format requirement
-ifeq ($(BOARD_KERNEL_IMAGE_NAME),)
-ifeq ($(BOARD_USES_UBOOT),true)
-        $(error "Please set BOARD_KERNEL_IMAGE_NAME to uImage")
-else ifeq ($(BOARD_USES_UNCOMPRESSED_BOOT),true)
-        $(error "Please set BOARD_KERNEL_IMAGE_NAME to Image")
-endif
-endif
-
 ifeq "$(wildcard $(KERNEL_SRC) )" ""
     ifneq ($(TARGET_PREBUILT_KERNEL),)
         HAS_PREBUILT_KERNEL := true
@@ -160,7 +153,7 @@ ifeq "$(wildcard $(KERNEL_SRC) )" ""
         $(warning * THIS IS DEPRECATED, AND WILL BE DISCONTINUED                *)
         $(warning * Please configure your device to download the kernel         *)
         $(warning * source repository to $(KERNEL_SRC))
-        $(warning * See http://wiki.cyanogenmod.org/w/Doc:_integrated_kernel_building)
+        $(warning * See http://wiki.lineageos.org/w/Doc:_integrated_kernel_building)
         $(warning * for more information                                        *)
         $(warning ***************************************************************)
         FULL_KERNEL_BUILD := false
@@ -210,10 +203,14 @@ KERNEL_MODULES_OUT := $(TARGET_OUT)/lib/modules
 endif
 
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(strip $(TARGET_KERNEL_CROSS_COMPILE_PREFIX))
-ifeq ($(TARGET_KERNEL_CROSS_COMPILE_PREFIX),)
-KERNEL_TOOLCHAIN_PREFIX ?= arm-eabi-
-else
+ifneq ($(TARGET_KERNEL_CROSS_COMPILE_PREFIX),)
 KERNEL_TOOLCHAIN_PREFIX ?= $(TARGET_KERNEL_CROSS_COMPILE_PREFIX)
+else ifeq ($(KERNEL_ARCH),arm64)
+KERNEL_TOOLCHAIN_PREFIX ?= aarch64-linux-android-
+else ifeq ($(KERNEL_ARCH),arm)
+KERNEL_TOOLCHAIN_PREFIX ?= arm-eabi-
+else ifeq ($(KERNEL_ARCH),x86)
+KERNEL_TOOLCHAIN_PREFIX ?= x86_64-linux-android-
 endif
 
 ifeq ($(KERNEL_TOOLCHAIN),)
