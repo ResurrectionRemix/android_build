@@ -1720,5 +1720,5 @@ check_bash_version && {
 
 export ANDROID_BUILD_TOP=$(gettop)
 
-. $ANDROID_BUILD_TOP/vendor/cm/tools/rr_variant.sh && ./vendor/cm/tools/changelog.sh &&
+. $ANDROID_BUILD_TOP/vendor/cm/tools/rr_variant.sh && ./vendor/cm/tools/rr_superuser.sh && ./vendor/cm/tools/changelog.sh &&
 . vendor/cm/build/envsetup.sh
