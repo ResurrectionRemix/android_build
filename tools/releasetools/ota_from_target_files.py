@@ -703,6 +703,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     manufacturer = GetBuildProp("ro.product.manufacturer", OPTIONS.info_dict)
     maintainer = GetBuildProp("ro.build.user", OPTIONS.info_dict)
     sdkver = GetBuildProp("ro.build.version.sdk", OPTIONS.info_dict)
+    magisk = GetBuildProp("rr.magisk.disable", OPTIONS.info_dict)
     script.Print(" **************** Software *****************");
     script.Print(" OS ver: %s"%(buildid));
     script.Print("");
@@ -711,8 +712,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print(" Security patch: %s"%(securep));
     script.Print("");
     script.Print(" SDK ver: %s"%(sdkver));
-    script.Print("");
-    script.Print(" Root status: Enabled");
     script.Print("");
     script.Print(" Build ID: %s"%(buildidn));
     script.Print("");
@@ -729,6 +728,8 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print(" Manufacturer: %s"%(manufacturer));
     script.Print("");
     script.Print(" LCD density: %s"%(density));
+    script.Print("");
+    script.Print(" ROOT DISABLED?: %s"%(magisk));
     script.Print("");
     script.Print(" *******************************************");
   
@@ -824,15 +825,16 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.WriteRawImage("/boot", "boot.img")
 
   if block_based:
-    script.Print(" ")
-    script.Print("Flashing Magisk...")
-    script.Print(" ")
-    common.ZipWriteStr(output_zip, "magisk/magisk.zip",
+    if not magisk :
+      script.Print(" ")
+      script.Print("Flashing Magisk...")
+      script.Print(" ")
+      common.ZipWriteStr(output_zip, "magisk/magisk.zip",
                    ""+input_zip.read("SYSTEM/addon.d/magisk.zip"))
-    script.FlashMagisk()
-    script.Print(" ")
-  script.ShowProgress(0.2, 10)
-  device_specific.FullOTA_InstallEnd()
+      script.FlashMagisk()
+      script.Print(" ")
+      script.ShowProgress(0.2, 10)
+      device_specific.FullOTA_InstallEnd()
 
   if OPTIONS.extra_script is not None:
     script.AppendExtra(OPTIONS.extra_script)
