@@ -691,6 +691,34 @@ function _lunch()
 }
 complete -F _lunch lunch 2>/dev/null
 
+# Inclusion of ROM conversion tools for Sprout
+# This tool helps to convert Sprout4 ROM's to Sprout8 ROMs which will hlp in reducing the build
+# Times greatly (We dont need to Build for the Sprout4 again
+function spcon()
+{
+    cur_dir=`pwd`
+    chmod a+x build/48c/make.sh
+    ./build/48c/make.sh
+}
+
+# Cleans the mess created by spcon() funct itself
+function cleansp()
+{
+    cur_dir=`pwd`
+    cd build/48c/
+    rm -rf boot.img-ramdisk
+    rm -rf mkbootfs
+    rm -rf mkbootimg
+    rm -rf ramdisk.gz
+    rm -rf zImage
+    rm -rf boot.img
+    cd mkboot
+    rm rsa.o
+    rm sha.o
+    rm mkbootfs
+    rm mkbootimg
+    cd ../../..
+}
 # Configures the build to build unbundled apps.
 # Run tapas with one or more app names (from LOCAL_PACKAGE_NAME)
 function tapas()
