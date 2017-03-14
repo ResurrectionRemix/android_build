@@ -656,12 +656,15 @@ def WriteMetadata(metadata, output_zip):
                      compress_type=zipfile.ZIP_STORED)
 
 
-def GetBuildProp(prop, info_dict):
+def GetBuildProp(prop, info_dict, raise_error=True):
   """Return the fingerprint of the build of a given target-files info_dict."""
   try:
     return info_dict.get("build.prop", {})[prop]
   except KeyError:
-    raise common.ExternalError("couldn't find %s in build.prop" % (prop,))
+    if raise_error:
+      raise common.ExternalError("couldn't find %s in build.prop" % (prop,))
+    else:
+      return None
 
 
 def HandleDowngradeMetadata(metadata):
