@@ -697,16 +697,11 @@ class BlockImageDiff(object):
       for xf in self.transfers:
         if xf.style == "zero":
           tgt_size = xf.tgt_ranges.size() * self.tgt.blocksize
-          print("%10d %10d (%6.2f%%) %7s %s" % (
-              tgt_size, tgt_size, 100.0, xf.style, xf.tgt_name))
 
         elif xf.style == "new":
           for piece in self.tgt.ReadRangeSet(xf.tgt_ranges):
             new_f.write(piece)
           tgt_size = xf.tgt_ranges.size() * self.tgt.blocksize
-          print("%10d %10d (%6.2f%%) %7s %s" % (
-              tgt_size, tgt_size, 100.0, xf.style,
-              xf.tgt_name))
 
         elif xf.style == "diff":
           src = self.src.ReadRangeSet(xf.src_ranges)
@@ -734,12 +729,6 @@ class BlockImageDiff(object):
             # These are identical; we don't need to generate a patch,
             # just issue copy commands on the device.
             xf.style = "move"
-            if xf.src_ranges != xf.tgt_ranges:
-              print("%10d %10d (%6.2f%%) %7s %s %s (from %s)" % (
-                  tgt_size, tgt_size, 100.0, xf.style,
-                  xf.tgt_name if xf.tgt_name == xf.src_name else (
-                      xf.tgt_name + " (from " + xf.src_name + ")"),
-                  str(xf.tgt_ranges), str(xf.src_ranges)))
           else:
             # For files in zip format (eg, APKs, JARs, etc.) we would
             # like to use imgdiff -z if possible (because it usually
@@ -787,11 +776,6 @@ class BlockImageDiff(object):
           size = len(patch)
           with lock:
             patches[patchnum] = (patch, xf)
-            print("%10d %10d (%6.2f%%) %7s %s %s %s" % (
-                size, tgt_size, size * 100.0 / tgt_size, xf.style,
-                xf.tgt_name if xf.tgt_name == xf.src_name else (
-                    xf.tgt_name + " (from " + xf.src_name + ")"),
-                str(xf.tgt_ranges), str(xf.src_ranges)))
 
       threads = [threading.Thread(target=diff_worker)
                  for _ in range(self.threads)]
