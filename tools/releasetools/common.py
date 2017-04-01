@@ -1228,6 +1228,44 @@ def ZipClose(zip_file):
   zipfile.ZIP64_LIMIT = saved_zip64_limit
 
 
+class ZipProxy(object):
+  def __init__(self, root):
+    self._root = root
+
+    self._namelist = []
+    for path, dirs, files in os.walk(root):
+      cd = os.path.relpath(path, root)
+      if cd != ".":
+        self._namelist.append(cd + "/")
+      for f in files:
+        self._namelist.append(os.path.join(cd, f))
+
+    self._infolist = [ZipProxyInfo(root, p) for p in self._namelist]
+
+  def _path(self, relpath):
+    return os.path.join(self._root, *relpath.split("/"))
+
+  def namelist(self):
+    return self._namelist
+
+  def infolist(self):
+    return self._infolist
+
+  def read(self, path):
+    if path not in self._namelist:
+      raise KeyError
+    with open(self._path(path)) as f:
+      buf = f.read()
+    return buf
+
+  def getinfo(self, path):
+    if path not in self._namelist:
+      raise KeyError
+
+class ZipProxyInfo(object):
+  def __init__(self, root, path):
+    self.filename = path
+
 class DeviceSpecificParams(object):
   module = None
   def __init__(self, **kwargs):
