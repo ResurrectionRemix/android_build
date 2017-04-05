@@ -23,6 +23,8 @@
 #include <limits.h>
 #include <errno.h>
 #include <assert.h>
+#include <sys/ioctl.h>
+#include </usr/include/linux/fs.h>
 
 #if defined(_WIN32)
 #include <direct.h>  /* For _mkdir() */
@@ -115,6 +117,22 @@ static void printNotNewerMsg(const char* src, const char* dst, unsigned int opti
  */
 static int copyFileContents(const char* dst, int dstFd, const char* src, int srcFd)
 {
+    /*
+     * Attempt to make a reflink
+     */
+    if (ioctl(dstFd, FICLONE, srcFd) != -1) {
+        return 0;
+    } else {
+        /*
+         * EINVAL means the operation is not supported, eg non-CoW FS
+         */
+        if (errno != EINVAL) {
+            fprintf(stderr,
+                "acp: failed cloning '%s' to '%s': %s\n", src, dst, strerror(errno));
+            return -1;
+        }
+    }
+
     unsigned char buf[8192];
     ssize_t readCount, writeCount;
 
