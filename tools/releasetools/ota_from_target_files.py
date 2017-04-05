@@ -824,7 +824,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.WriteRawImage("/boot", "boot.img")
 
   if block_based:
-    if os.getenv('EXCLUDE_MAGISK','false') != 'true' :
     script.Print(" ")
     script.Print("Flashing Magisk...")
     script.Print(" ")
