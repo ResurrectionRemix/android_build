@@ -255,7 +255,6 @@ def LoadInfoDict(input_file, input_dir=None):
   makeint("blocksize")
   makeint("system_size")
   makeint("vendor_size")
-  makeint("userdata_size")
   makeint("cache_size")
   makeint("recovery_size")
   makeint("boot_size")
@@ -854,10 +853,6 @@ def CheckSize(data, target, info_dict):
   fs_type = None
   limit = None
   if info_dict["fstab"]:
-    if mount_point == "/userdata_extra":
-      mount_point = "/data"
-    if mount_point == "/userdata":
-      mount_point = "/data"
     p = info_dict["fstab"][mount_point]
     fs_type = p.fs_type
     device = p.device

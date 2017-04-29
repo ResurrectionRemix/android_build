@@ -78,7 +78,6 @@ dont_bother_goals := clean clobber dataclean installclean \
     help out \
     snod systemimage-nodeps \
     stnod systemtarball-nodeps \
-    userdataimage-nodeps userdatatarball-nodeps \
     cacheimage-nodeps \
     vendorimage-nodeps \
     systemotherimage-nodeps \
@@ -888,16 +887,6 @@ systemtarball: $(INSTALLED_SYSTEMTARBALL_TARGET)
 .PHONY: boottarball
 boottarball: $(INSTALLED_BOOTTARBALL_TARGET)
 
-.PHONY: userdataimage
-userdataimage: $(INSTALLED_USERDATAIMAGE_TARGET)
-
-ifneq (,$(filter userdataimage, $(MAKECMDGOALS)))
-$(call dist-for-goals, userdataimage, $(BUILT_USERDATAIMAGE_TARGET))
-endif
-
-.PHONY: userdatatarball
-userdatatarball: $(INSTALLED_USERDATATARBALL_TARGET)
-
 .PHONY: cacheimage
 cacheimage: $(INSTALLED_CACHEIMAGE_TARGET)
 
@@ -931,7 +920,6 @@ droidcore: files \
 	systemimage \
 	$(INSTALLED_BOOTIMAGE_TARGET) \
 	$(INSTALLED_RECOVERYIMAGE_TARGET) \
-	$(INSTALLED_USERDATAIMAGE_TARGET) \
 	$(INSTALLED_CACHEIMAGE_TARGET) \
 	$(INSTALLED_VENDORIMAGE_TARGET) \
 	$(INSTALLED_SYSTEMOTHERIMAGE_TARGET) \

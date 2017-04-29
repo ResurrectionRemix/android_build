@@ -402,12 +402,8 @@ def BuildImage(in_dir, prop_dict, out_file, target_out=None):
     if "extfs_sparse_flag" in prop_dict:
       build_command.append(prop_dict["extfs_sparse_flag"])
       #run_fsck = True
-    if "is_userdataextra" in prop_dict:
-      build_command.extend([in_dir, out_file, fs_type,
-                           "data"])
-    else:
-      build_command.extend([in_dir, out_file, fs_type,
-                            prop_dict["mount_point"]])
+    build_command.extend([in_dir, out_file, fs_type,
+                          prop_dict["mount_point"]])
     build_command.append(prop_dict["partition_size"])
     if "journal_size" in prop_dict:
       build_command.extend(["-j", prop_dict["journal_size"]])
@@ -619,16 +615,6 @@ def ImagePropFromGlobalDict(glob_dict, mount_point):
     copy_prop("system_squashfs_block_size", "squashfs_block_size")
     copy_prop("system_base_fs_file", "base_fs_file")
     copy_prop("system_extfs_inode_count", "extfs_inode_count")
-  elif mount_point == "data":
-    # Copy the generic fs type first, override with specific one if available.
-    copy_prop("fs_type", "fs_type")
-    copy_prop("userdata_fs_type", "fs_type")
-    copy_prop("userdata_size", "partition_size")
-  elif mount_point == "data_extra":
-    copy_prop("fs_type", "fs_type")
-    copy_prop("userdataextra_size", "partition_size")
-    copy_prop("userdataextra_name", "partition_name")
-    d["is_userdataextra"] = True
   elif mount_point == "cache":
     copy_prop("cache_fs_type", "fs_type")
     copy_prop("cache_size", "partition_size")
@@ -690,8 +676,6 @@ def main(argv):
       mount_point = "system"
     elif image_filename == "system_other.img":
       mount_point = "system_other"
-    elif image_filename == "userdata.img":
-      mount_point = "data"
     elif image_filename == "cache.img":
       mount_point = "cache"
     elif image_filename == "vendor.img":
