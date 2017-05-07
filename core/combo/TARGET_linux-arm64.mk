@@ -56,6 +56,8 @@ TARGET_TOOLCHAIN_ROOT := prebuilts/gcc/$(HOST_PREBUILT_TAG)/aarch64/aarch64-linu
 TARGET_TOOLS_PREFIX := $(TARGET_TOOLCHAIN_ROOT)/bin/aarch64-linux-android-
 endif
 
+include $(BUILD_SYSTEM)/archidroid.mk
+
 TARGET_CC := $(TARGET_TOOLS_PREFIX)gcc
 TARGET_CXX := $(TARGET_TOOLS_PREFIX)g++
 TARGET_AR := $(TARGET_TOOLS_PREFIX)ar
@@ -118,12 +120,13 @@ TARGET_GLOBAL_LDFLAGS += \
 			-fuse-ld=gold \
 			-Wl,--icf=safe \
 			-Wl,--no-undefined-version \
-			$(arch_variant_ldflags)
+			$(arch_variant_ldflags) \
+			$(ARCHIDROID_GCC_LDFLAGS)
 
 # Disable transitive dependency library symbol resolving.
-TARGET_GLOBAL_LDFLAGS += -Wl,--allow-shlib-undefined
+TARGET_GLOBAL_LDFLAGS += -Wl,--allow-shlib-undefined $(ARCHIDROID_GCC_LDFLAGS)
 
-TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
+TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden $(ARCHIDROID_GCC_CPPFLAGS)
 
 # More flags/options can be added here
 TARGET_RELEASE_CFLAGS := \
@@ -132,7 +135,8 @@ TARGET_RELEASE_CFLAGS := \
 			-Wstrict-aliasing=2 \
 			-fgcse-after-reload \
 			-frerun-cse-after-loop \
-			-frename-registers
+			-frename-registers \
+			$(ARCHIDROID_GCC_CFLAGS_ARM) \
 
 libc_root := bionic/libc
 libm_root := bionic/libm
