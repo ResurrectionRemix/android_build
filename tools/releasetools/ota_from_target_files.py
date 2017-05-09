@@ -707,28 +707,18 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   system_progress = 0.75
 
-  script.Print(" ")
-  script.Print(" ")
-  script.Print(" ")
-  script.Print(" RRRRRRRRRRRRRRRRR     RRRRRRRRRRRRRRRRR   ")
-  script.Print(" R::::::::::::::::R    R::::::::::::::::R  ")
-  script.Print(" R::::::RRRRRR:::::R   R::::::RRRRRR:::::R ")
-  script.Print(" RR:::::R     R:::::R  RR:::::R     R:::::R")
-  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
-  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
-  script.Print("   R::::RRRRRR:::::R     R::::RRRRRR:::::R ")
-  script.Print("   R:::::::::::::RR      R:::::::::::::RR  ")
-  script.Print("   R::::RRRRRR:::::R     R::::RRRRRR:::::R ")
-  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
-  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
-  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
-  script.Print(" RR:::::R     R:::::R  RR:::::R     R:::::R")
-  script.Print(" R::::::R     R:::::R  R::::::R     R:::::R")
-  script.Print(" R::::::R     R:::::R  R::::::R     R:::::R")
-  script.Print(" RRRRRRRR     RRRRRRR  RRRRRRRR     RRRRRRR")
-  script.Print(" ")
-  script.Print(" ")
-  
+  script.Print("*****************************************************")
+  script.Print("    ___                               __  _          ")
+  script.Print("   / _ \___ ___ __ _____________ ____/ /_(_)__  ___  ")
+  script.Print("  / , _/ -_|_-</ // / __/ __/ -_) __/ __/ / _ \/ _ \ ")
+  script.Print(" /_/|_|\__/___/\_,_/_/ /_/  \__/\__/\__/_/\___/_//_/ ")
+  script.Print("           ___            _        ____  ____        ")
+  script.Print("          / _ \___ __ _  (_)_ __  / __ \/ __/        ")
+  script.Print("         / , _/ -_)  ' \/ /\ \ / / /_/ /\ \          ")
+  script.Print("        /_/|_|\__/_/_/_/_//_\_\  \____/___/          ")
+  script.Print("                                                     ")
+  script.Print("                                                     ")
+
   if GetBuildProp("ro.rr.version", OPTIONS.info_dict) is not None:
     buildid = GetBuildProp("ro.rr.version", OPTIONS.info_dict)
     buildtype = GetBuildProp("rr.build.type", OPTIONS.info_dict)
@@ -742,34 +732,33 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     manufacturer = GetBuildProp("ro.product.manufacturer", OPTIONS.info_dict)
     maintainer = GetBuildProp("ro.build.user", OPTIONS.info_dict)
     sdkver = GetBuildProp("ro.build.version.sdk", OPTIONS.info_dict)
-    script.Print(" **************** Software *****************");
-    script.Print(" OS ver: %s"%(buildid));
+    script.Print("****************** S O F T W A R E ******************");
+    script.Print(" ROM OS: %s"%(buildid));
     script.Print("");
-    script.Print(" Android ver: %s"%(androidver));
+    script.Print(" Security Patch: %s"%(securep));
     script.Print("");
-    script.Print(" Security patch: %s"%(securep));
+    script.Print(" Android OS: %s"%(androidver));
     script.Print("");
-    script.Print(" SDK ver: %s"%(sdkver));
+    script.Print(" Android ID: %s"%(buildidn));
     script.Print("");
-    script.Print(" Root status: Enabled");
-    script.Print("");
-    script.Print(" Build ID: %s"%(buildidn));
-    script.Print("");
-    script.Print(" Build date: %s"%(buildday));
-    script.Print("");
-    script.Print(" Build type: %s"%(buildtype));
-    script.Print("");
-    script.Print(" Build host: %s"%(buildhst));
+    script.Print(" Build Type: %s"%(buildtype));
     script.Print("");
     script.Print(" Maintainer: %s"%(maintainer));
-    script.Print(" **************** Hardware *****************");
-    script.Print(" Device codename: %s"%(device));
+    script.Print("");
+    script.Print(" Build Host: %s"%(buildhst));
+    script.Print("");
+    script.Print(" Build Date: %s"%(buildday));
+    script.Print("");
+    script.Print(" Root Status: Enabled");
+    script.Print("");
+    script.Print(" SDK Version: %s"%(sdkver));
+    script.Print("****************** H A R D W A R E ******************");
+    script.Print(" Device Codename: %s"%(device));
     script.Print("");
     script.Print(" Manufacturer: %s"%(manufacturer));
     script.Print("");
     script.Print(" LCD density: %s"%(density));
-    script.Print("");
-    script.Print(" *******************************************");
+    script.Print("*****************************************************");
   
   if OPTIONS.wipe_user_data:
     system_progress -= 0.1
