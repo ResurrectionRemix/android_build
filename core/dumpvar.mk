@@ -1,16 +1,11 @@
 
 # List of variables we want to print in the build banner.
 print_build_config_vars := \
-  PLATFORM_VERSION \
   RR_VERSION \
+  PLATFORM_VERSION \
+  BUILD_ID \
   TARGET_PRODUCT \
   TARGET_BUILD_VARIANT \
-  TARGET_BUILD_TYPE \
-  TARGET_ARCH \
-  HOST_ARCH \
-  HOST_OS \
-  HOST_BUILD_TYPE \
-  BUILD_ID \
   OUT_DIR
 
 ifeq ($(WITH_SU),true)
