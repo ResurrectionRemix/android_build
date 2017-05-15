@@ -34,6 +34,10 @@ ifeq ($(WITH_GMS),true)
 print_build_config_vars += \
   WITH_GMS
 endif
+ifneq ($(RR_BUILDTYPE),)
+print_build_config_vars += \
+  RR_BUILDTYPE
+endif
 
 ifeq ($(TARGET_BUILD_PDK),true)
 print_build_config_vars += \
