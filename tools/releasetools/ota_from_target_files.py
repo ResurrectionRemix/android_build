@@ -634,10 +634,10 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   metadata["ota-type"] = "BLOCK" if block_based else "FILE"
 
-  if not OPTIONS.omit_prereq:
-    ts = GetBuildProp("ro.build.date.utc", OPTIONS.info_dict)
-    ts_text = GetBuildProp("ro.build.date", OPTIONS.info_dict)
-    script.AssertOlderBuild(ts, ts_text)
+  #if not OPTIONS.omit_prereq:
+  #  ts = GetBuildProp("ro.build.date.utc", OPTIONS.info_dict)
+  #  ts_text = GetBuildProp("ro.build.date", OPTIONS.info_dict)
+  #  script.AssertOlderBuild(ts, ts_text)
 
   AppendAssertions(script, OPTIONS.info_dict, oem_dict)
   device_specific.FullOTA_Assertions()
@@ -862,14 +862,16 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")
 
-  if block_based:
-    script.Print(" ")
-    script.Print("Flashing Magisk...")
-    script.Print(" ")
-    common.ZipWriteStr(output_zip, "magisk/magisk.zip",
-                   ""+input_zip.read("SYSTEM/addon.d/magisk.zip"))
-    script.FlashMagisk()
-    script.Print(" ")
+  if os.getenv('WITH_ROOT_METHOD','rootless') == "magisk":
+    if block_based:
+      script.Print(" ")
+      script.Print("Flashing Magisk...")
+      script.Print(" ")
+      common.ZipWriteStr(output_zip, "magisk/magisk.zip",
+                     ""+input_zip.read("SYSTEM/addon.d/magisk.zip"))
+      script.FlashMagisk()
+      script.Print(" ")
+
   script.ShowProgress(0.2, 10)
   device_specific.FullOTA_InstallEnd()
 

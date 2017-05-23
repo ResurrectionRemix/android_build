@@ -4,6 +4,7 @@ print_build_config_vars := \
   PLATFORM_VERSION_CODENAME \
   PLATFORM_VERSION \
   RR_VERSION \
+  WITH_ROOT_METHOD \
   TARGET_PRODUCT \
   TARGET_BUILD_VARIANT \
   TARGET_BUILD_TYPE \
@@ -32,6 +33,10 @@ endif
 ifeq ($(WITH_GMS),true)
 print_build_config_vars += \
   WITH_GMS
+endif
+ifneq ($(RR_BUILDTYPE),)
+print_build_config_vars += \
+  RR_BUILDTYPE
 endif
 
 ifeq ($(TARGET_BUILD_PDK),true)
