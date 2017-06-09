@@ -1,11 +1,18 @@
-
+DEVICE := $(CM_BUILD)
 # List of variables we want to print in the build banner.
 print_build_config_vars := \
-  RR_VERSION \
   PLATFORM_VERSION \
-  BUILD_ID \
-  TARGET_PRODUCT \
+  RR_VERSION
+ifneq ($(RR_BUILDTYPE),)
+  print_build_config_vars += \
+    RR_BUILDTYPE
+endif
+print_build_config_vars += \
+  DEVICE \
+  WITH_ROOT_METHOD \
   TARGET_BUILD_VARIANT \
+  TARGET_ARCH \
+  BUILD_ID \
   OUT_DIR
 
 ifeq ($(WITH_SU),true)
