@@ -1,28 +1,17 @@
-
+DEVICE := $(CM_BUILD)
 # List of variables we want to print in the build banner.
 print_build_config_vars := \
-  PLATFORM_VERSION_CODENAME \
   PLATFORM_VERSION \
-  RR_VERSION \
+  RR_VERSION
+ifneq ($(RR_BUILDTYPE),)
+  print_build_config_vars += \
+    RR_BUILDTYPE
+endif
+print_build_config_vars += \
+  DEVICE \
   WITH_ROOT_METHOD \
-  TARGET_PRODUCT \
   TARGET_BUILD_VARIANT \
-  TARGET_BUILD_TYPE \
-  TARGET_BUILD_APPS \
   TARGET_ARCH \
-  TARGET_ARCH_VARIANT \
-  TARGET_CPU_VARIANT \
-  TARGET_2ND_ARCH \
-  TARGET_2ND_ARCH_VARIANT \
-  TARGET_2ND_CPU_VARIANT \
-  HOST_ARCH \
-  HOST_2ND_ARCH \
-  HOST_OS \
-  HOST_OS_EXTRA \
-  HOST_CROSS_OS \
-  HOST_CROSS_ARCH \
-  HOST_CROSS_2ND_ARCH \
-  HOST_BUILD_TYPE \
   BUILD_ID \
   OUT_DIR
 
@@ -33,10 +22,6 @@ endif
 ifeq ($(WITH_GMS),true)
 print_build_config_vars += \
   WITH_GMS
-endif
-ifneq ($(RR_BUILDTYPE),)
-print_build_config_vars += \
-  RR_BUILDTYPE
 endif
 
 ifeq ($(TARGET_BUILD_PDK),true)
