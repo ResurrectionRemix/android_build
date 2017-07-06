@@ -34,10 +34,10 @@ def colorforseverity(sev):
     return 'grey'
 
 warnpatterns = [
-    { 'category':'make',    'severity':severity.MEDIUM,   'members':[], 'option':'',
-        'description':'make: overriding commands/ignoring old commands',
-        'patterns':[r".*: warning: overriding commands for target .+",
-                    r".*: warning: ignoring old commands for target .+"] },
+#    { 'category':'make',    'severity':severity.MEDIUM,   'members':[], 'option':'',
+#        'description':'make: overriding commands/ignoring old commands',
+#        'patterns':[r".*: warning: overriding commands for target .+",
+#                    r".*: warning: ignoring old commands for target .+"] },
     { 'category':'C/C++',   'severity':severity.HIGH,     'members':[], 'option':'-Wimplicit-function-declaration',
         'description':'Implicit function declaration',
         'patterns':[r".*: warning: implicit declaration of function .+"] },

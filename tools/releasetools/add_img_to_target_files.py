@@ -39,7 +39,7 @@ Usage:  add_img_to_target_files [flag] target_files
        as the option in sign_target_files_apks)
 
   --is_signing
-      Skip building & adding the images for "userdata" and "cache" if we
+      Skip building & adding the images for "cache" if we
       are signing the target files.
 
   --verity_signer_path
@@ -235,112 +235,6 @@ def CreateImage(input_dir, info_dict, what, block_list=None):
 
   return img
 
-
-def AddUserdata(output_zip, prefix="IMAGES/"):
-  """Create a userdata image and store it in output_zip.
-
-  In most case we just create and store an empty userdata.img;
-  But the invoker can also request to create userdata.img with real
-  data from the target files, by setting "userdata_img_with_data=true"
-  in OPTIONS.info_dict.
-  """
-
-  prebuilt_path = os.path.join(OPTIONS.input_tmp, prefix, "userdata.img")
-  if os.path.exists(prebuilt_path):
-    print "userdata.img already exists in %s, no need to rebuild..." % (prefix,)
-    return
-
-  image_props = build_image.ImagePropFromGlobalDict(OPTIONS.info_dict, "data")
-  # We only allow yaffs to have a 0/missing partition_size.
-  # Extfs, f2fs must have a size. Skip userdata.img if no size.
-  if (not image_props.get("fs_type", "").startswith("yaffs") and
-      not image_props.get("partition_size")):
-    return
-
-  print "creating userdata.img..."
-
-  # Use a fixed timestamp (01/01/2009) when packaging the image.
-  # Bug: 24377993
-  epoch = datetime.datetime.fromtimestamp(0)
-  timestamp = (datetime.datetime(2009, 1, 1) - epoch).total_seconds()
-  image_props["timestamp"] = int(timestamp)
-
-  # The name of the directory it is making an image out of matters to
-  # mkyaffs2image.  So we create a temp dir, and within it we create an
-  # empty dir named "data", or a symlink to the DATA dir,
-  # and build the image from that.
-  temp_dir = tempfile.mkdtemp()
-  user_dir = os.path.join(temp_dir, "data")
-  empty = (OPTIONS.info_dict.get("userdata_img_with_data") != "true")
-  if empty:
-    # Create an empty dir.
-    os.mkdir(user_dir)
-  else:
-    # Symlink to the DATA dir.
-    os.symlink(os.path.join(OPTIONS.input_tmp, "DATA"),
-               user_dir)
-
-  img = tempfile.NamedTemporaryFile()
-
-  fstab = OPTIONS.info_dict["fstab"]
-  if fstab:
-    image_props["fs_type"] = fstab["/data"].fs_type
-  succ = build_image.BuildImage(user_dir, image_props, img.name)
-  assert succ, "build userdata.img image failed"
-
-  common.CheckSize(img.name, "userdata.img", OPTIONS.info_dict)
-  common.ZipWrite(output_zip, img.name, prefix + "userdata.img")
-  img.close()
-  shutil.rmtree(temp_dir)
-
-
-def AddUserdataExtra(output_zip, prefix="IMAGES/"):
-  """Create extra userdata image and store it in output_zip."""
-
-  image_props = build_image.ImagePropFromGlobalDict(OPTIONS.info_dict,
-                                                  "data_extra")
-
-  # The build system has to explicitly request extra userdata.
-  if "fs_type" not in image_props:
-    return
-
-  extra_name = image_props.get("partition_name", "extra")
-
-  prebuilt_path = os.path.join(OPTIONS.input_tmp, prefix, "userdata_%s.img" % extra_name)
-  if os.path.exists(prebuilt_path):
-    print "userdata_%s.img already exists in %s, no need to rebuild..." % (extra_name, prefix,)
-    return
-
-  # We only allow yaffs to have a 0/missing partition_size.
-  # Extfs, f2fs must have a size. Skip userdata_extra.img if no size.
-  if (not image_props.get("fs_type", "").startswith("yaffs") and
-      not image_props.get("partition_size")):
-    return
-
-  print "creating userdata_%s.img..." % extra_name
-
-  # The name of the directory it is making an image out of matters to
-  # mkyaffs2image.  So we create a temp dir, and within it we create an
-  # empty dir named "data", and build the image from that.
-  temp_dir = tempfile.mkdtemp()
-  user_dir = os.path.join(temp_dir, "data")
-  os.mkdir(user_dir)
-  img = tempfile.NamedTemporaryFile()
-
-  fstab = OPTIONS.info_dict["fstab"]
-  if fstab:
-    image_props["fs_type" ] = fstab["/data"].fs_type
-  succ = build_image.BuildImage(user_dir, image_props, img.name)
-  assert succ, "build userdata_%s.img image failed" % extra_name
-
-  # Disable size check since this fetches original data partition size
-  #common.CheckSize(img.name, "userdata_extra.img", OPTIONS.info_dict)
-  output_zip.write(img.name, prefix + "userdata_%s.img" % extra_name)
-  img.close()
-  os.rmdir(user_dir)
-  os.rmdir(temp_dir)
-
-
 def AddCache(output_zip, prefix="IMAGES/"):
   """Create an empty cache image and store it in output_zip."""
 
@@ -468,10 +362,6 @@ def AddImagesToTargetFiles(filename):
     banner("system_other")
     AddSystemOther(output_zip)
   if not OPTIONS.is_signing:
-    banner("userdata")
-    AddUserdata(output_zip)
-    banner("extrauserdata")
-    AddUserdataExtra(output_zip)
     banner("cache")
     AddCache(output_zip)
   if has_oem:

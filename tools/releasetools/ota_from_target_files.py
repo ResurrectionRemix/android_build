@@ -2225,9 +2225,12 @@ def main(argv):
 
   # Load the dict file from the zip directly to have a peek at the OTA type.
   # For packages using A/B update, unzipping is not needed.
-  input_zip = zipfile.ZipFile(args[0], "r")
-  OPTIONS.info_dict = common.LoadInfoDict(input_zip)
-  common.ZipClose(input_zip)
+  if os.path.isdir(args[0]):
+    OPTIONS.info_dict = common.LoadInfoDict(args[0])
+  else:
+    input_zip = zipfile.ZipFile(args[0], "r")
+    OPTIONS.info_dict = common.LoadInfoDict(input_zip)
+    common.ZipClose(input_zip)
 
   if "ota_override_device" in OPTIONS.info_dict:
     OPTIONS.override_device = OPTIONS.info_dict.get("ota_override_device")
@@ -2262,11 +2265,16 @@ def main(argv):
   if OPTIONS.extra_script is not None:
     OPTIONS.extra_script = open(OPTIONS.extra_script).read()
 
-  print "unzipping target target-files..."
-  OPTIONS.input_tmp, input_zip = common.UnzipTemp(args[0])
-
-  OPTIONS.target_tmp = OPTIONS.input_tmp
-  OPTIONS.info_dict = common.LoadInfoDict(input_zip, OPTIONS.target_tmp)
+  if os.path.isdir(args[0]):
+    OPTIONS.input_tmp = args[0]
+    input_zip = common.ZipProxy(args[0])
+    OPTIONS.target_tmp = OPTIONS.input_tmp
+    OPTIONS.info_dict = common.LoadInfoDict(args[0], OPTIONS.target_tmp)
+  else:
+    print "unzipping target target-files..."
+    OPTIONS.input_tmp, input_zip = common.UnzipTemp(args[0])
+    OPTIONS.target_tmp = OPTIONS.input_tmp
+    OPTIONS.info_dict = common.LoadInfoDict(input_zip, OPTIONS.target_tmp)
 
   if OPTIONS.verbose:
     print "--- target info ---"

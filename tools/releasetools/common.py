@@ -255,7 +255,6 @@ def LoadInfoDict(input_file, input_dir=None):
   makeint("blocksize")
   makeint("system_size")
   makeint("vendor_size")
-  makeint("userdata_size")
   makeint("cache_size")
   makeint("recovery_size")
   makeint("boot_size")
@@ -854,10 +853,6 @@ def CheckSize(data, target, info_dict):
   fs_type = None
   limit = None
   if info_dict["fstab"]:
-    if mount_point == "/userdata_extra":
-      mount_point = "/data"
-    if mount_point == "/userdata":
-      mount_point = "/data"
     p = info_dict["fstab"][mount_point]
     fs_type = p.fs_type
     device = p.device
@@ -1233,6 +1228,44 @@ def ZipClose(zip_file):
   zipfile.ZIP64_LIMIT = saved_zip64_limit
 
 
+class ZipProxy(object):
+  def __init__(self, root):
+    self._root = root
+
+    self._namelist = []
+    for path, dirs, files in os.walk(root):
+      cd = os.path.relpath(path, root)
+      if cd != ".":
+        self._namelist.append(cd + "/")
+      for f in files:
+        self._namelist.append(os.path.join(cd, f))
+
+    self._infolist = [ZipProxyInfo(root, p) for p in self._namelist]
+
+  def _path(self, relpath):
+    return os.path.join(self._root, *relpath.split("/"))
+
+  def namelist(self):
+    return self._namelist
+
+  def infolist(self):
+    return self._infolist
+
+  def read(self, path):
+    if path not in self._namelist:
+      raise KeyError
+    with open(self._path(path)) as f:
+      buf = f.read()
+    return buf
+
+  def getinfo(self, path):
+    if path not in self._namelist:
+      raise KeyError
+
+class ZipProxyInfo(object):
+  def __init__(self, root, path):
+    self.filename = path
+
 class DeviceSpecificParams(object):
   module = None
   def __init__(self, **kwargs):
@@ -1521,8 +1554,6 @@ class BlockDifference(object):
     if progress:
       script.ShowProgress(progress, 0)
     self._WriteUpdate(script, output_zip)
-    if OPTIONS.verify:
-      self._WritePostInstallVerifyScript(script)
 
   def WriteStrictVerifyScript(self, script):
     """Verify all the blocks in the care_map, including clobbered blocks.
@@ -1684,8 +1715,7 @@ class BlockDifference(object):
 
     call = ('block_image_update("{device}", '
             'package_extract_file("{partition}.transfer.list"), '
-            '"{partition}.new.dat", "{partition}.patch.dat") ||\n'
-            '  abort("E{code}: Failed to update {partition} image.");'.format(
+            '"{partition}.new.dat", "{partition}.patch.dat");'.format(
                 device=self.device, partition=self.partition, code=code))
     script.AppendExtra(script.WordWrap(call))
 

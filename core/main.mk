@@ -78,7 +78,6 @@ dont_bother_goals := clean clobber dataclean deviceclean installclean \
     help out \
     snod systemimage-nodeps \
     stnod systemtarball-nodeps \
-    userdataimage-nodeps userdatatarball-nodeps \
     cacheimage-nodeps \
     vendorimage-nodeps \
     systemotherimage-nodeps \
@@ -362,6 +361,7 @@ ifneq (,$(user_variant))
   # Target is secure in user builds.
   ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1
   ADDITIONAL_DEFAULT_PROPERTIES += security.perf_harden=1
+  ADDITIONAL_DEFAULT_PROPERTIES += persist.security.deny_new_usb=dynamic
 
   ifeq ($(user_variant),user)
     ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=1
@@ -380,11 +380,11 @@ ifneq (,$(user_variant))
 
 else # !user_variant
   # Turn on checkjni for non-user builds.
-  ADDITIONAL_BUILD_PROPERTIES += ro.kernel.android.checkjni=1
+  #ADDITIONAL_BUILD_PROPERTIES += ro.kernel.android.checkjni=1
   # Set device insecure for non-user builds.
   ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
   # Allow mock locations by default for non user builds
-  ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=1
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=0
 endif # !user_variant
 
 ifeq (true,$(strip $(enable_target_debugging)))
@@ -888,16 +888,6 @@ systemtarball: $(INSTALLED_SYSTEMTARBALL_TARGET)
 .PHONY: boottarball
 boottarball: $(INSTALLED_BOOTTARBALL_TARGET)
 
-.PHONY: userdataimage
-userdataimage: $(INSTALLED_USERDATAIMAGE_TARGET)
-
-ifneq (,$(filter userdataimage, $(MAKECMDGOALS)))
-$(call dist-for-goals, userdataimage, $(BUILT_USERDATAIMAGE_TARGET))
-endif
-
-.PHONY: userdatatarball
-userdatatarball: $(INSTALLED_USERDATATARBALL_TARGET)
-
 .PHONY: cacheimage
 cacheimage: $(INSTALLED_CACHEIMAGE_TARGET)
 
@@ -931,7 +921,6 @@ droidcore: files \
 	systemimage \
 	$(INSTALLED_BOOTIMAGE_TARGET) \
 	$(INSTALLED_RECOVERYIMAGE_TARGET) \
-	$(INSTALLED_USERDATAIMAGE_TARGET) \
 	$(INSTALLED_CACHEIMAGE_TARGET) \
 	$(INSTALLED_VENDORIMAGE_TARGET) \
 	$(INSTALLED_SYSTEMOTHERIMAGE_TARGET) \
