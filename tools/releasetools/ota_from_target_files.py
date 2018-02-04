@@ -527,7 +527,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     buildday = GetBuildProp("ro.build.date", OPTIONS.info_dict)
     securep = GetBuildProp("ro.build.version.security_patch", OPTIONS.info_dict)
     buildhst = GetBuildProp("ro.build.host", OPTIONS.info_dict)
-    density = GetBuildProp("ro.sf.lcd_density", OPTIONS.info_dict)
     device = GetBuildProp("ro.rr.device", OPTIONS.info_dict)
     androidver = GetBuildProp("ro.build.version.release", OPTIONS.info_dict)
     manufacturer = GetBuildProp("ro.product.manufacturer", OPTIONS.info_dict)
@@ -557,8 +556,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print(" Device codename: %s"%(device));
     script.Print("");
     script.Print(" Manufacturer: %s"%(manufacturer));
-    script.Print("");
-    script.Print(" LCD density: %s"%(density));
     script.Print("");
     script.Print(" *******************************************");
     
