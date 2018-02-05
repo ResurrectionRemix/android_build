@@ -93,6 +93,6 @@ FRAMEWORKS_BASE_SUBDIRS := \
 FRAMEWORKS_BASE_JAVA_SRC_DIRS := \
 	$(addprefix frameworks/base/,$(FRAMEWORKS_BASE_SUBDIRS))
 
-ifneq ($(LINEAGE_BUILD),)
--include $(TOPDIR)vendor/lineage/build/core/pathmap.mk
+ifneq ($(RR_BUILD),)
+-include $(TOPDIR)vendor/rr/build/core/pathmap.mk
 endif
