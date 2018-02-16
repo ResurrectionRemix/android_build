@@ -529,7 +529,9 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     device = GetBuildProp("ro.rr.device", OPTIONS.info_dict)
     androidver = GetBuildProp("ro.build.version.release", OPTIONS.info_dict)
     manufacturer = GetBuildProp("ro.product.manufacturer", OPTIONS.info_dict)
-    maintainer = GetBuildProp("ro.build.user", OPTIONS.info_dict)
+    maintainer = GetBuildProp("ro.rr.maintainer", OPTIONS.info_dict, False)
+    if maintainer is None:
+        maintainer = GetBuildProp("ro.build.user", OPTIONS.info_dict)
     sdkver = GetBuildProp("ro.build.version.sdk", OPTIONS.info_dict)
     script.Print(" **************** Software *****************");
     script.Print(" OS ver: %s"%(buildid));
