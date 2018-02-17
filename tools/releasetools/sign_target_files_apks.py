@@ -498,7 +498,7 @@ def ReplaceOtaKeys(input_tf_zip, output_tf_zip, misc_info):
 
   # Save the base64 key representation in the update for key-change
   # validations
-  p = common.Run(["python", "vendor/lineage/build/tools/getb64key.py",
+  p = common.Run(["python", "vendor/rr/build/tools/getb64key.py",
                  mapped_keys[0]], stdout=subprocess.PIPE)
   data, _ = p.communicate()
   if p.returncode == 0:
