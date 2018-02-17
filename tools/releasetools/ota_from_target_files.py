@@ -528,7 +528,8 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     buildhst = GetBuildProp("ro.build.host", OPTIONS.info_dict)
     device = GetBuildProp("ro.rr.device", OPTIONS.info_dict)
     androidver = GetBuildProp("ro.build.version.release", OPTIONS.info_dict)
-    manufacturer = GetBuildProp("ro.product.manufacturer", OPTIONS.info_dict)
+    manufacturer = GetBuildProp("ro.product.manufacturer", OPTIONS.info_dict, False)
+    density = GetBuildProp("ro.sf.lcd_density", OPTIONS.info_dict, False)
     maintainer = GetBuildProp("ro.rr.maintainer", OPTIONS.info_dict, False)
     if maintainer is None:
         maintainer = GetBuildProp("ro.build.user", OPTIONS.info_dict)
@@ -554,8 +555,12 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print(" **************** Hardware *****************");
     script.Print(" Device codename: %s"%(device));
     script.Print("");
-    script.Print(" Manufacturer: %s"%(manufacturer));
-    script.Print("");
+    if density is not None:
+        script.Print(" Density: %s"%(density));
+        script.Print("");
+    if manufacturer is not None:
+        script.Print(" Manufacturer: %s"%(manufacturer));
+        script.Print("");
     script.Print(" *******************************************");
     
 
