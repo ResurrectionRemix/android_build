@@ -21,4 +21,4 @@
 #   May need to remove the following for newly launched devices in P since this
 #   NFC configuration file should be in vendor/etc, instead of system/etc
 PRODUCT_COPY_FILES += \
-    device/generic/common/nfc/libnfc-nci.conf:system/etc/libnfc-nci.conf
+    build/make/target/product/nfc/libnfc-nci.conf:system/etc/libnfc-nci.conf
