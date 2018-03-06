@@ -186,7 +186,7 @@ FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
 # General entries for project pathmap.  Any entries listed here should
 # be device and hardware independent.
 $(call project-set-path-variant,recovery,RECOVERY_VARIANT,bootable/recovery)
-ifeq ($(LINEAGE_BUILD),)
+ifeq ($(RR_BUILD),)
 # AOSP targets should use AOSP RIL
 $(call project-set-path,ril,hardware/ril)
 endif
