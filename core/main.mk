@@ -371,7 +371,7 @@ ADDITIONAL_BUILD_PROPERTIES += dalvik.vm.stack-trace-dir=/data/anr
 
 # ------------------------------------------------------------
 # Include vendor specific additions to build properties
--include vendor/lineage/build/core/main.mk
+-include vendor/rr/build/core/main.mk
 
 # ------------------------------------------------------------
 # Define a function that, given a list of module tags, returns

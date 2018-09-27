@@ -229,8 +229,8 @@ FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
 $(call project-set-path-variant,ril,TARGET_RIL_VARIANT,hardware/ril)
 
 -include vendor/extra/BoardConfigExtra.mk
-ifneq ($(LINEAGE_BUILD),)
-include vendor/lineage/config/BoardConfigLineage.mk
+ifneq ($(RR_BUILD),)
+include vendor/rr/config/BoardConfigLineage.mk
 endif
 
 # The build system exposes several variables for where to find the kernel
@@ -1148,10 +1148,10 @@ include $(BUILD_SYSTEM)/ninja_config.mk
 include $(BUILD_SYSTEM)/soong_config.mk
 endif
 
-ifneq ($(LINEAGE_BUILD),)
+ifneq ($(RR_BUILD),)
 ## We need to be sure the global selinux policies are included
 ## last, to avoid accidental resetting by device configs
-$(eval include device/lineage/sepolicy/common/sepolicy.mk)
+$(eval include device/rr/sepolicy/common/sepolicy.mk)
 endif
 
 # Include any vendor specific config.mk file
