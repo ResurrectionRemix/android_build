@@ -835,6 +835,64 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   system_progress = 0.75
 
+  script.Print("");
+  script.Print(" RRRRRRRRRRRRRRRRR     RRRRRRRRRRRRRRRRR   ")
+  script.Print(" R::::::::::::::::R    R::::::::::::::::R  ")
+  script.Print(" R::::::RRRRRR:::::R   R::::::RRRRRR:::::R ")
+  script.Print(" RR:::::R     R:::::R  RR:::::R     R:::::R")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print("   R::::RRRRRR:::::R     R::::RRRRRR:::::R ")
+  script.Print("   R:::::::::::::RR      R:::::::::::::RR  ")
+  script.Print("   R::::RRRRRR:::::R     R::::RRRRRR:::::R ")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print(" RR:::::R     R:::::R  RR:::::R     R:::::R")
+  script.Print(" R::::::R     R:::::R  R::::::R     R:::::R")
+  script.Print(" R::::::R     R:::::R  R::::::R     R:::::R")
+  script.Print(" RRRRRRRR     RRRRRRR  RRRRRRRR     RRRRRRR")
+  script.Print("");
+
+
+  build = target_info.GetBuildProp("ro.build.date")
+  buildid = target_info.GetBuildProp("ro.rr.version")
+  buildtype = target_info.GetBuildProp("ro.rr.releasetype")
+  buildidn = target_info.GetBuildProp("ro.build.id")
+  buildday = target_info.GetBuildProp("ro.build.date")
+  securep = target_info.GetBuildProp("ro.build.version.security_patch")
+  buildhst = target_info.GetBuildProp("ro.build.host")
+  device = target_info.GetBuildProp("ro.rr.device")
+  androidver = target_info.GetBuildProp("ro.build.version.release")
+  manufacturer = target_info.GetBuildProp("ro.product.manufacturer")
+  maintainer = target_info.GetBuildProp("ro.build.user")
+  sdkver = target_info.GetBuildProp("ro.build.version.sdk")
+  
+  script.Print(" **************** Information *****************");
+  script.Print(" OS ver: %s"%(buildid));
+  script.Print("");
+  script.Print(" Android ver: %s"%(androidver));
+  script.Print("");
+  script.Print(" Security patch: %s"%(securep));
+  script.Print("");
+  script.Print(" SDK ver: %s"%(sdkver));
+  script.Print("");
+  script.Print(" Build ID: %s"%(buildidn));
+  script.Print("");
+  script.Print(" Build date: %s"%(buildday));
+  script.Print("");
+  script.Print(" Build type: %s"%(buildtype));
+  script.Print("");
+  script.Print(" Build host: %s"%(buildhst));
+  script.Print("");
+  script.Print(" Maintainer: %s"%(maintainer));
+  script.Print("");
+  script.Print(" Device codename: %s"%(device));
+  script.Print("");
+  script.Print(" Manufacturer: %s"%(manufacturer));
+  script.Print("");
+  script.Print(" *******************************************");
+
   if OPTIONS.wipe_user_data:
     system_progress -= 0.1
   if HasVendorPartition(input_zip):
