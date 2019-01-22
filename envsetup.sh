@@ -143,8 +143,7 @@ function check_product()
         return
     fi
     if (echo -n $1 | grep -q -e "^rr_") ; then
-        CUSTOM_BUILD=$(echo -n $1 | sed -e 's/^rr_//g')
-        export BUILD_NUMBER=$( (date +%s%N ; echo $RR_BUILD; hostname) | openssl sha1 | sed -e 's/.*=//g; s/ //g' | cut -c1-10 )
+        RR_BUILD=$(echo -n $1 | sed -e 's/^rr_//g')
     else
         RR_BUILD=
     fi
