@@ -890,7 +890,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Print("");
   script.Print(" Build host: %s"%(buildhst));
   script.Print("");
-  script.Print(" Maintainer: %s"%(maintainer));
+  script.Print(" Build user: %s"%(maintainer));
   script.Print("");
   script.Print(" Device codename: %s"%(device));
   script.Print("");
