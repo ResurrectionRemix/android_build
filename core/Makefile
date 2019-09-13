@@ -1852,10 +1852,17 @@ $(INSTALLED_RECOVERY_BUILD_PROP_TARGET): \
 	$(hide) cat $(INSTALLED_PRODUCT_SERVICES_BUILD_PROP_TARGET) >> $@
 	$(call append-recovery-ui-properties,$(PRIVATE_RECOVERY_UI_PROPERTIES),$@)
 
+ifneq ($(TARGET_PREBUILT_RECOVERY_RAMDISK_IMG),)
 INTERNAL_RECOVERYIMAGE_ARGS := \
-	$(addprefix --second ,$(INSTALLED_2NDBOOTLOADER_TARGET)) \
-	--kernel $(recovery_kernel) \
-	--ramdisk $(recovery_ramdisk)
+    $(addprefix --second ,$(INSTALLED_2NDBOOTLOADER_TARGET)) \
+    --kernel $(recovery_kernel) \
+    --ramdisk $(TARGET_PREBUILT_RECOVERY_RAMDISK_IMG)
+else
+INTERNAL_RECOVERYIMAGE_ARGS := \
+    $(addprefix --second ,$(INSTALLED_2NDBOOTLOADER_TARGET)) \
+    --kernel $(recovery_kernel) \
+    --ramdisk $(recovery_ramdisk)
+endif
 
 # Assumes this has already been stripped
 ifdef INTERNAL_KERNEL_CMDLINE
@@ -3832,9 +3839,18 @@ $(BUILT_TARGET_FILES_PACKAGE): \
 	$(hide) mkdir -p $(dir $@) $(zip_root)
 ifneq (,$(INSTALLED_RECOVERYIMAGE_TARGET)$(filter true,$(BOARD_USES_RECOVERY_AS_BOOT)))
 	@# Components of the recovery image
+ifneq ($(TARGET_PREBUILT_RECOVERY_RAMDISK),)
+	$(hide) mkdir -p $(zip_root)/$(PRIVATE_RECOVERY_OUT)
+	$(hide) rm -rf $(PRODUCT_OUT)/prebuilt_recovery
+	$(hide) mkdir -p $(PRODUCT_OUT)/prebuilt_recovery
+	$(hide) unzip -o $(TARGET_PREBUILT_RECOVERY_RAMDISK) -d $(PRODUCT_OUT)/prebuilt_recovery/
+	$(hide) $(call package_files-copy-root, \
+	    $(PRODUCT_OUT)/prebuilt_recovery,$(zip_root)/$(PRIVATE_RECOVERY_OUT)/RAMDISK)
+else
 	$(hide) mkdir -p $(zip_root)/$(PRIVATE_RECOVERY_OUT)
 	$(hide) $(call package_files-copy-root, \
 	    $(TARGET_RECOVERY_ROOT_OUT),$(zip_root)/$(PRIVATE_RECOVERY_OUT)/RAMDISK)
+endif
 	@# OTA install helpers
 	$(hide) $(call package_files-copy-root, \
 	    $(PRODUCT_OUT)/install,$(zip_root)/INSTALL)
