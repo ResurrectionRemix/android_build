@@ -22,7 +22,7 @@
 PRODUCT_PROPERTY_OVERRIDES := \
     keyguard.no_require_sim=true \
 
-ifeq ($(LINEAGE_BUILD),)
+ifeq ($(RR_BUILD),)
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.com.android.dataroaming=true
 endif
@@ -30,7 +30,7 @@ endif
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
 
-ifeq ($(LINEAGE_BUILD),)
+ifeq ($(RR_BUILD),)
 PRODUCT_COPY_FILES += \
     device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml
 endif

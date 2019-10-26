@@ -41,7 +41,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     netutils-wrapper-1.0
 
-ifeq ($(LINEAGE_BUILD),)
+ifeq ($(RR_BUILD),)
 # Additional settings used in all AOSP builds
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.config.ringtone=Ring_Synth_04.ogg \
@@ -52,7 +52,7 @@ endif
 PRODUCT_LOCALES := en_US
 
 # Get some sounds
-ifeq ($(LINEAGE_BUILD),)
+ifeq ($(RR_BUILD),)
 $(call inherit-product-if-exists, frameworks/base/data/sounds/AllAudio.mk)
 else
 $(call inherit-product-if-exists, frameworks/base/data/sounds/AudioPackage14.mk)
