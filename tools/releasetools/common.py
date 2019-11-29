@@ -2181,6 +2181,10 @@ class BlockDifference(object):
                 new_data_name=new_data_name, code=code))
     script.AppendExtra(script.WordWrap(call))
 
+    call = ('delete_recursive("/data/system/package_cache");')
+    script.AppendExtra(script.WordWrap(call))
+
+
   def _HashBlocks(self, source, ranges): # pylint: disable=no-self-use
     data = source.ReadRangeSet(ranges)
     ctx = sha1()
