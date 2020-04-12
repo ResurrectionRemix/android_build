@@ -1621,4 +1621,4 @@ addcompletions
 
 export ANDROID_BUILD_TOP=$(gettop)
 
-. $ANDROID_BUILD_TOP/vendor/rr/build/envsetup.sh
+. $ANDROID_BUILD_TOP/vendor/rr/tools/rr_variant.sh && ./vendor/rr/tools/changelog.sh && . vendor/rr/build/envsetup.sh
