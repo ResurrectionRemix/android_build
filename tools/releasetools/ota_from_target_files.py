@@ -1058,20 +1058,27 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Print("Target: {}".format(target_info.fingerprint))
 
   #Print ASCII
-  script.Print("****************************************************************************");
-  script.Print("_______                                            __________               ");
-  script.Print("___  __ \_______________  ____________________________  /___(_)____________  ");
-  script.Print("__  /_/ /  _ \_  ___/  / / /_  ___/_  ___/  _ \  ___/  __/_  /_  __ \_  __ \ ");
-  script.Print("_  _, _//  __/(__  )/ /_/ /_  /   _  /   /  __/ /__ / /_ _  / / /_/ /  / / / ");
-  script.Print("/_/ |_| \___//____/ \__,_/ /_/    /_/    \___/\___/ \__/ /_/  \____//_/ /_/  ");
-  script.Print("                                                                             ");
-  script.Print("________                _____                                                ");
-  script.Print("___  __ \___________ ______(_)___  __                                        ");
-  script.Print("__  /_/ /  _ \_  __ `__ \_  /__  |/_/                                        ");
-  script.Print("_  _, _//  __/  / / / / /  / __>  <                                          ");
-  script.Print("/_/ |_| \___//_/ /_/ /_//_/  /_/|_|                                          ");
-  script.Print("                                                                             ");
-  script.Print("****************************************************************************");
+  script.Print(" ")
+  script.Print(" ")
+  script.Print(" ")
+  script.Print(" RRRRRRRRRRRRRRRRR     RRRRRRRRRRRRRRRRR   ")
+  script.Print(" R::::::::::::::::R    R::::::::::::::::R  ")
+  script.Print(" R::::::RRRRRR:::::R   R::::::RRRRRR:::::R ")
+  script.Print(" RR:::::R     R:::::R  RR:::::R     R:::::R")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print("   R::::RRRRRR:::::R     R::::RRRRRR:::::R ")
+  script.Print("   R:::::::::::::RR      R:::::::::::::RR  ")
+  script.Print("   R::::RRRRRR:::::R     R::::RRRRRR:::::R ")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print("   R::::R     R:::::R    R::::R     R:::::R")
+  script.Print(" RR:::::R     R:::::R  RR:::::R     R:::::R")
+  script.Print(" R::::::R     R:::::R  R::::::R     R:::::R")
+  script.Print(" R::::::R     R:::::R  R::::::R     R:::::R")
+  script.Print(" RRRRRRRR     RRRRRRR  RRRRRRRR     RRRRRRR")
+  script.Print(" ")
+  script.Print(" ")
   
   if target_info.GetBuildProp("ro.rr.build.version") is not None:
     buildid = target_info.GetBuildProp("ro.rr.build.version")
