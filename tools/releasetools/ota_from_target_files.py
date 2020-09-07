@@ -1059,21 +1059,21 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   #Print ASCII
   script.Print("****************************************************************************");
-  script.Print(________                                            __________               ");
-  script.Print(___  __ \_______________  ____________________________  /___(_)____________  ");
-  script.Print(__  /_/ /  _ \_  ___/  / / /_  ___/_  ___/  _ \  ___/  __/_  /_  __ \_  __ \ ");
-  script.Print(_  _, _//  __/(__  )/ /_/ /_  /   _  /   /  __/ /__ / /_ _  / / /_/ /  / / / ");
-  script.Print(/_/ |_| \___//____/ \__,_/ /_/    /_/    \___/\___/ \__/ /_/  \____//_/ /_/  ");
-  script.Print(                                                                             ");
-  script.Print(________                _____                                                ");
-  script.Print(___  __ \___________ ______(_)___  __                                        ");
-  script.Print(__  /_/ /  _ \_  __ `__ \_  /__  |/_/                                        ");
-  script.Print(_  _, _//  __/  / / / / /  / __>  <                                          ");
-  script.Print(/_/ |_| \___//_/ /_/ /_//_/  /_/|_|                                          ");
-  script.Print(                                                                             ");
+  script.Print("_______                                            __________               ");
+  script.Print("___  __ \_______________  ____________________________  /___(_)____________  ");
+  script.Print("__  /_/ /  _ \_  ___/  / / /_  ___/_  ___/  _ \  ___/  __/_  /_  __ \_  __ \ ");
+  script.Print("_  _, _//  __/(__  )/ /_/ /_  /   _  /   /  __/ /__ / /_ _  / / /_/ /  / / / ");
+  script.Print("/_/ |_| \___//____/ \__,_/ /_/    /_/    \___/\___/ \__/ /_/  \____//_/ /_/  ");
+  script.Print("                                                                             ");
+  script.Print("________                _____                                                ");
+  script.Print("___  __ \___________ ______(_)___  __                                        ");
+  script.Print("__  /_/ /  _ \_  __ `__ \_  /__  |/_/                                        ");
+  script.Print("_  _, _//  __/  / / / / /  / __>  <                                          ");
+  script.Print("/_/ |_| \___//_/ /_/ /_//_/  /_/|_|                                          ");
+  script.Print("                                                                             ");
   script.Print("****************************************************************************");
   
-    if target_info.GetBuildProp("ro.rr.build.version") is not None:
+  if target_info.GetBuildProp("ro.rr.build.version") is not None:
     buildid = target_info.GetBuildProp("ro.rr.build.version")
     buildidn = target_info.GetBuildProp("ro.build.id")
     buildday = target_info.GetBuildProp("ro.build.date")
