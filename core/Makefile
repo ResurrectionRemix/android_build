@@ -306,6 +306,11 @@ BUILD_KEYS := test-keys
 else
 BUILD_KEYS := release-keys
 endif
+
+ifeq ($(RR_BUILDTYPE), Official)
+BUILD_KEYS := release-keys
+endif
+
 BUILD_VERSION_TAGS += $(BUILD_KEYS)
 BUILD_VERSION_TAGS := $(subst $(space),$(comma),$(sort $(BUILD_VERSION_TAGS)))
 
