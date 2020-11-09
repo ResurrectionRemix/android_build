@@ -1085,7 +1085,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     buildidn = target_info.GetBuildProp("ro.build.id")
     buildday = target_info.GetBuildProp("ro.build.date")
     securep = target_info.GetBuildProp("ro.build.version.security_patch")
-    device = target_info.GetBuildProp("ro.product.system.model")
+    device = target_info.GetBuildProp("ro.product.system.device")
     androidver = target_info.GetBuildProp("ro.build.version.release")
     manufacturer = target_info.GetBuildProp("ro.product.system.manufacturer")
     sdkver = target_info.GetBuildProp("ro.build.version.sdk")
