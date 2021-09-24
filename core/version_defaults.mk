@@ -252,7 +252,7 @@ ifndef PLATFORM_SECURITY_PATCH
     #  If there is no $PLATFORM_SECURITY_PATCH set, keep it empty.
       PLATFORM_SECURITY_PATCH := 2021-09-05
 endif
-.KATI_READONLY := PLATFORM_SECURITY_PATCH
+#.KATI_READONLY := PLATFORM_SECURITY_PATCH
 
 ifndef PLATFORM_SECURITY_PATCH_TIMESTAMP
   # Used to indicate the matching timestamp for the security patch string in PLATFORM_SECURITY_PATCH.
